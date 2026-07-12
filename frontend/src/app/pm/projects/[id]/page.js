@@ -6,7 +6,7 @@ import Layout from '../../../../components/Layout';
 import api from '../../../../services/api';
 import { 
   ArrowLeft, Plus, Users, CheckSquare, 
-  Trash2, X, UserMinus, ShieldAlert, Calendar 
+  Trash2, X, UserMinus, ShieldAlert, Calendar, Pencil 
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -22,6 +22,8 @@ export default function PMProjectWorkspace({ params }) {
   // Modals
   const [memberModalOpen, setMemberModalOpen] = useState(false);
   const [taskModalOpen, setTaskModalOpen] = useState(false);
+  const [editTaskModalOpen, setEditTaskModalOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
 
   // Add Member State
   const [selectedUserIds, setSelectedUserIds] = useState([]);
@@ -33,6 +35,14 @@ export default function PMProjectWorkspace({ params }) {
   const [taskStatus, setTaskStatus] = useState('TODO');
   const [taskDueDate, setTaskDueDate] = useState('');
   const [taskAssigneeId, setTaskAssigneeId] = useState('');
+
+  // Edit Task State
+  const [editTitle, setEditTitle] = useState('');
+  const [editDesc, setEditDesc] = useState('');
+  const [editPriority, setEditPriority] = useState('MEDIUM');
+  const [editStatus, setEditStatus] = useState('TODO');
+  const [editDueDate, setEditDueDate] = useState('');
+  const [editAssigneeId, setEditAssigneeId] = useState('');
 
   const [modalError, setModalError] = useState('');
   const [modalSuccess, setModalSuccess] = useState('');
@@ -147,6 +157,48 @@ export default function PMProjectWorkspace({ params }) {
       fetchProjectDetails();
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to delete task.');
+    }
+  };
+
+  const handleOpenEditTask = (task) => {
+    setEditingTask(task);
+    setEditTitle(task.title || '');
+    setEditDesc(task.description || '');
+    setEditPriority(task.priority || 'MEDIUM');
+    setEditStatus(task.status || 'TODO');
+    setEditDueDate(task.dueDate ? new Date(task.dueDate).toISOString().substring(0, 10) : '');
+    setEditAssigneeId(task.assigneeId ? String(task.assigneeId) : '');
+    setModalError('');
+    setModalSuccess('');
+    setEditTaskModalOpen(true);
+  };
+
+  const handleSaveTask = async (e) => {
+    e.preventDefault();
+    setModalError('');
+    setModalSuccess('');
+    if (!editTitle.trim()) {
+      setModalError('Task title is required.');
+      return;
+    }
+    try {
+      await api.put(`/tasks/${editingTask.id}`, {
+        title: editTitle,
+        description: editDesc,
+        priority: editPriority,
+        status: editStatus,
+        dueDate: editDueDate ? new Date(editDueDate).toISOString() : null,
+        assigneeId: editAssigneeId ? parseInt(editAssigneeId) : null,
+      });
+      setModalSuccess('Task updated successfully!');
+      fetchProjectDetails();
+      setTimeout(() => {
+        setEditTaskModalOpen(false);
+        setEditingTask(null);
+        setModalSuccess('');
+      }, 800);
+    } catch (err) {
+      setModalError(err.response?.data?.message || 'Failed to update task.');
     }
   };
 
@@ -281,6 +333,13 @@ export default function PMProjectWorkspace({ params }) {
                             )}
                           </div>
                           
+                          <button
+                            onClick={() => handleOpenEditTask(task)}
+                            className="p-2 rounded-xl text-slate-450 dark:text-slate-500 hover:text-[#ff9500] hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-all border border-transparent hover:border-amber-200 dark:hover:border-amber-900/30"
+                            title="Edit task"
+                          >
+                            <Pencil size={14} />
+                          </button>
                           <button
                             onClick={() => handleDeleteTask(task.id)}
                             className="p-2 rounded-xl text-slate-450 dark:text-slate-500 hover:text-[#ff3b30] hover:bg-red-50 dark:hover:bg-red-950/20 transition-all border border-transparent hover:border-slate-200 dark:hover:border-slate-800"
@@ -538,6 +597,125 @@ export default function PMProjectWorkspace({ params }) {
                       className="px-4.5 py-2.5 text-xs font-bold text-white bg-[#ff3b30] hover:bg-[#e02d22] rounded-xl shadow-lg shadow-red-500/10 transition-all"
                     >
                       Create Task
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* Edit Task Modal */}
+          {editTaskModalOpen && editingTask && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <div className="fixed inset-0 bg-slate-955/65 backdrop-blur-sm" onClick={() => setEditTaskModalOpen(false)}></div>
+              <div className="bg-white dark:bg-[#1e1f25] border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-3xl p-6 shadow-2xl relative z-10 text-slate-900 dark:text-white transition-colors">
+                <div className="flex items-center justify-between mb-5">
+                  <div>
+                    <span className="text-[9px] font-bold text-[#ff9500] uppercase tracking-wider block">Edit Task</span>
+                    <h3 className="font-extrabold text-sm text-slate-850 dark:text-white mt-0.5 line-clamp-1">{editingTask.title}</h3>
+                  </div>
+                  <button onClick={() => setEditTaskModalOpen(false)} className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                    <X size={18} />
+                  </button>
+                </div>
+
+                <form onSubmit={handleSaveTask} className="space-y-4">
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Task Title</label>
+                    <input
+                      type="text"
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      placeholder="Task title..."
+                      className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/10 focus:border-[#ff9500] text-slate-900 dark:text-white"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Description</label>
+                    <textarea
+                      value={editDesc}
+                      onChange={(e) => setEditDesc(e.target.value)}
+                      placeholder="Task details..."
+                      rows="3"
+                      className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/10 focus:border-[#ff9500] text-slate-900 dark:text-white"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Priority</label>
+                      <select
+                        value={editPriority}
+                        onChange={(e) => setEditPriority(e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/10 focus:border-[#ff9500] text-slate-900 dark:text-white"
+                      >
+                        <option value="LOW">Low</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="HIGH">High</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Status</label>
+                      <select
+                        value={editStatus}
+                        onChange={(e) => setEditStatus(e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/10 focus:border-[#ff9500] text-slate-900 dark:text-white"
+                      >
+                        <option value="TODO">Todo</option>
+                        <option value="IN_PROGRESS">In Progress</option>
+                        <option value="REVIEW">Review</option>
+                        <option value="COMPLETED">Completed</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Assignee</label>
+                      <select
+                        value={editAssigneeId}
+                        onChange={(e) => setEditAssigneeId(e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/10 focus:border-[#ff9500] text-slate-900 dark:text-white"
+                      >
+                        <option value="">Unassigned</option>
+                        {project.members.map((member) => (
+                          <option key={member.userId} value={member.userId}>
+                            {member.user.firstName} {member.user.lastName}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Due Date</label>
+                      <input
+                        type="date"
+                        value={editDueDate}
+                        onChange={(e) => setEditDueDate(e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/10 focus:border-[#ff9500] text-slate-900 dark:text-white"
+                      />
+                    </div>
+                  </div>
+
+                  {modalError && <p className="text-xs text-rose-500 font-semibold">{modalError}</p>}
+                  {modalSuccess && <p className="text-xs text-emerald-500 font-semibold">{modalSuccess}</p>}
+
+                  <div className="flex justify-end gap-3 mt-6 border-t border-slate-200 dark:border-slate-800/80 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => setEditTaskModalOpen(false)}
+                      className="px-4 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2.5 text-xs font-bold text-white bg-[#ff9500] hover:bg-[#e08800] rounded-xl shadow-lg shadow-amber-500/10 transition-all"
+                    >
+                      Save Changes
                     </button>
                   </div>
                 </form>
