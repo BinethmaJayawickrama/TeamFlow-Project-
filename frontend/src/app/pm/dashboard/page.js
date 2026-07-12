@@ -45,6 +45,12 @@ export default function PMDashboard() {
   }, []);
 
   const COLORS = ['#6366f1', '#f59e0b', '#3b82f6', '#10b981']; // Indigo, Amber, Blue, Emerald
+  const STATUS_COLORS = {
+    'TODO': '#6366f1',
+    'IN_PROGRESS': '#f59e0b',
+    'REVIEW': '#3b82f6',
+    'COMPLETED': '#10b981'
+  };
 
   if (loading) {
     return (
@@ -141,7 +147,7 @@ export default function PMDashboard() {
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
-                        data={charts.tasksByStatus}
+                        data={charts.tasksByStatus.filter(t => t.value > 0)}
                         cx="50%"
                         cy="50%"
                         innerRadius={50}
@@ -149,8 +155,8 @@ export default function PMDashboard() {
                         paddingAngle={5}
                         dataKey="value"
                       >
-                        {charts.tasksByStatus.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        {charts.tasksByStatus.filter(t => t.value > 0).map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.name] || '#cbd5e1'} />
                         ))}
                       </Pie>
                       <Tooltip 

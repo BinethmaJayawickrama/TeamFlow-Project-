@@ -9,27 +9,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: "#eef2ff",
-          100: "#e0e7ff",
-          200: "#c7d2fe",
-          300: "#a5b4fc",
-          400: "#818cf8",
-          500: "#6366f1", // Indigo-500
-          600: "#4f46e5",
-          700: "#4338ca",
-          800: "#3730a3",
-          900: "#312e81",
-          950: "#1e1b4b",
+        themeRed: {
+          DEFAULT: "#ff3b30",
+          hover: "#e02d22",
         },
-        success: {
-          500: "#10b981", // Emerald-500
+        themeOrange: {
+          DEFAULT: "#ff9500",
+          yellow: "#ffcc00",
         },
-        warning: {
-          500: "#f59e0b", // Amber-500
-        },
-        danger: {
-          500: "#ef4444", // Red-500
+        themeDark: {
+          body: "#18191e",
+          card: "#1e1f25",
+          navbar: "#111216",
         },
       },
       fontFamily: {
