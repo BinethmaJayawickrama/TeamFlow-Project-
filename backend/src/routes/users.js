@@ -4,12 +4,11 @@ const { authenticate, authorize } = require('../middleware/auth');
 
 const router = express.Router();
 
-// All routes are restricted to Administrator role
-router.use(authenticate, authorize('ADMIN'));
+router.use(authenticate);
 
-router.get('/', getUsers);
-router.post('/', createUser);
-router.put('/:id', updateUser);
-router.delete('/:id', deleteUser);
+router.get('/', authorize('ADMIN', 'PROJECT_MANAGER'), getUsers);
+router.post('/', authorize('ADMIN'), createUser);
+router.put('/:id', authorize('ADMIN'), updateUser);
+router.delete('/:id', authorize('ADMIN'), deleteUser);
 
 module.exports = router;
