@@ -73,10 +73,10 @@ export default function KanbanBoard() {
   };
 
   const columns = [
-    { id: 'TODO', title: 'To Do', color: 'border-t-indigo-500 bg-indigo-50/10' },
-    { id: 'IN_PROGRESS', title: 'In Progress', color: 'border-t-amber-500 bg-amber-50/10' },
-    { id: 'REVIEW', title: 'Review', color: 'border-t-blue-500 bg-blue-50/10' },
-    { id: 'COMPLETED', title: 'Completed', color: 'border-t-emerald-500 bg-emerald-50/10' },
+    { id: 'TODO', title: 'To Do', color: 'border-t-[#ff3b30] bg-[#ff3b30]/5' },
+    { id: 'IN_PROGRESS', title: 'In Progress', color: 'border-t-[#ff9500] bg-[#ff9500]/5' },
+    { id: 'REVIEW', title: 'Review', color: 'border-t-[#ffcc00] bg-[#ffcc00]/5' },
+    { id: 'COMPLETED', title: 'Completed', color: 'border-t-emerald-500 bg-emerald-500/5' },
   ];
 
   const getTasksByColumn = (colId) => {
@@ -86,61 +86,69 @@ export default function KanbanBoard() {
   return (
     <RouteGuard allowedRoles={['TEAM_MEMBER']}>
       <Layout>
-        <div className="space-y-6">
+        {/* Outer Directory Container - Theme matching deep bg */}
+        <div className="space-y-8 bg-white dark:bg-[#18191e] text-slate-900 dark:text-white p-2 rounded-[2rem] border border-slate-200 dark:border-slate-800/40 relative overflow-hidden font-sans transition-colors duration-200 min-h-[80vh] pb-12">
           
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">Kanban Board</h2>
-            <p className="text-slate-500 dark:text-slate-400 text-sm">Visualize project workflows. Update task statuses using action controls.</p>
+          {/* Orbs */}
+          <div className="absolute top-0 right-0 w-80 h-80 bg-[#ff3b30]/5 rounded-full blur-[80px] pointer-events-none"></div>
+
+          {/* Header Banner */}
+          <div className="p-4">
+            <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Kanban Board</h2>
+            <p className="text-slate-555 dark:text-slate-400 text-sm mt-0.5">Visualize project workflows. Update task statuses using action controls.</p>
           </div>
 
           {loading ? (
             <div className="flex items-center justify-center min-h-[50vh]">
-              <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+              <div className="relative w-8 h-8 mx-auto">
+                <div className="absolute inset-0 border-3 border-[#ff3b30]/10 rounded-full"></div>
+                <div className="absolute inset-0 border-3 border-[#ff3b30] border-t-transparent rounded-full animate-spin"></div>
+              </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 board-height items-start overflow-y-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 items-start overflow-y-auto px-4">
               {columns.map((col) => {
                 const colTasks = getTasksByColumn(col.id);
                 return (
                   <div 
                     key={col.id} 
-                    className={`bg-white dark:bg-slate-900 border-t-4 border-slate-200 dark:border-slate-800 rounded-3xl p-4 shadow-sm h-full flex flex-col justify-between ${col.color}`}
+                    className={`bg-white dark:bg-[#1e1f25] border border-slate-200 dark:border-slate-800/60 border-t-4 rounded-3xl p-4 shadow-sm flex flex-col justify-between ${col.color}`}
                   >
                     {/* Header */}
-                    <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100 dark:border-slate-800/80">
-                      <span className="font-bold text-sm tracking-tight">{col.title}</span>
-                      <span className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2.5 py-0.5 rounded-full font-bold">
+                    <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-150 dark:border-slate-800/60">
+                      <span className="font-bold text-xs uppercase tracking-wider text-slate-850 dark:text-white">{col.title}</span>
+                      <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2.5 py-0.5 rounded-full font-bold">
                         {colTasks.length}
                       </span>
                     </div>
 
                     {/* Task List */}
-                    <div className="space-y-3 flex-1 overflow-y-auto min-h-64 pr-0.5">
+                    <div className="space-y-3 flex-1 overflow-y-auto min-h-[25rem] pr-0.5 scrollbar-thin">
                       {colTasks.length === 0 ? (
-                        <div className="text-center py-12 text-slate-400 text-xs border border-dashed border-slate-150 dark:border-slate-800 rounded-2xl">
+                        <div className="text-center py-16 text-slate-400 dark:text-slate-550 text-xs font-semibold border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
                           No tasks here.
                         </div>
                       ) : (
                         colTasks.map((task) => (
                           <div 
                             key={task.id}
-                            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700 p-4 rounded-2xl shadow-sm space-y-3 transition-colors group"
+                            className="bg-white dark:bg-[#1c1d21]/45 border border-slate-200 dark:border-slate-800/60 hover:border-slate-350 dark:hover:border-slate-700 p-4 rounded-2xl shadow-sm space-y-3 transition-colors group"
                           >
                             <div>
-                              <span className="text-[8px] font-bold text-indigo-500 dark:text-indigo-400 uppercase tracking-wider block">
+                              <span className="text-[8px] font-extrabold text-[#ff3b30] uppercase tracking-wider block">
                                 {task.projectName}
                               </span>
-                              <h4 className="font-semibold text-xs text-slate-800 dark:text-slate-200 mt-1 line-clamp-2 leading-normal">
+                              <h4 className="font-bold text-xs text-slate-850 dark:text-slate-200 mt-1 line-clamp-2 leading-normal">
                                 {task.title}
                               </h4>
                             </div>
 
                             {/* Metadata */}
-                            <div className="flex items-center justify-between text-[10px] text-slate-400">
-                              <span className={`inline-block px-1.5 py-0.5 rounded font-bold text-[8px] tracking-wider uppercase ${
-                                task.priority === 'HIGH' ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/20' :
-                                task.priority === 'MEDIUM' ? 'bg-amber-50 text-amber-600 dark:bg-amber-950/20' :
-                                'bg-slate-100 text-slate-650 dark:bg-slate-850'
+                            <div className="flex items-center justify-between text-[9px] text-slate-400 dark:text-slate-500 font-semibold uppercase tracking-wider">
+                              <span className={`inline-flex px-1.5 py-0.5 rounded font-bold text-[8px] tracking-wider uppercase border ${
+                                task.priority === 'HIGH' ? 'bg-red-50/50 dark:bg-red-950/20 text-[#ff3b30] border-red-100 dark:border-red-900/30' :
+                                task.priority === 'MEDIUM' ? 'bg-amber-50/50 dark:bg-amber-950/20 text-[#ff9500] border-amber-100 dark:border-amber-900/30' :
+                                'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700/50'
                               }`}>
                                 {task.priority}
                               </span>
@@ -153,10 +161,10 @@ export default function KanbanBoard() {
                             </div>
 
                             {/* Card Actions */}
-                            <div className="pt-3 border-t border-slate-100 dark:border-slate-850 flex items-center justify-between">
+                            <div className="pt-3 border-t border-slate-150 dark:border-slate-850 flex items-center justify-between">
                               <button
                                 onClick={() => handleOpenTask(task.id)}
-                                className="flex items-center gap-1 text-[10px] font-semibold text-slate-500 hover:text-indigo-500 hover:underline"
+                                className="flex items-center gap-1 text-[10px] font-extrabold text-slate-500 hover:text-[#ff3b30] hover:underline"
                                 title="View details"
                               >
                                 <Eye size={12} />
@@ -168,7 +176,7 @@ export default function KanbanBoard() {
                                 {col.id !== 'TODO' && (
                                   <button
                                     onClick={() => handleMoveStatus(task.id, task.status, -1)}
-                                    className="p-1 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-400"
+                                    className="p-1 border border-slate-200 dark:border-slate-700/60 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-400 hover:text-[#ff3b30] transition-colors"
                                     title="Move back"
                                   >
                                     <ArrowLeft size={10} />
@@ -177,7 +185,7 @@ export default function KanbanBoard() {
                                 {col.id !== 'COMPLETED' && (
                                   <button
                                     onClick={() => handleMoveStatus(task.id, task.status, 1)}
-                                    className="p-1 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-400"
+                                    className="p-1 border border-slate-200 dark:border-slate-700/60 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-400 hover:text-[#ff3b30] transition-colors"
                                     title="Move forward"
                                   >
                                     <ArrowRight size={10} />

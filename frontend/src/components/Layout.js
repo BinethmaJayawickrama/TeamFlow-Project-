@@ -95,8 +95,13 @@ export default function Layout({ children }) {
   const getNavLinks = () => {
     if (!user) return [];
     
+    let dashPath = '/auth/login';
+    if (user.role === 'ADMIN') dashPath = '/admin/dashboard';
+    else if (user.role === 'PROJECT_MANAGER') dashPath = '/pm/dashboard';
+    else if (user.role === 'TEAM_MEMBER') dashPath = '/member/dashboard';
+
     const base = [
-      { name: 'Dashboard', path: `/${user.role.toLowerCase().replace('_', '')}/dashboard`, icon: LayoutDashboard }
+      { name: 'Dashboard', path: dashPath, icon: LayoutDashboard }
     ];
 
     if (user.role === 'ADMIN') {

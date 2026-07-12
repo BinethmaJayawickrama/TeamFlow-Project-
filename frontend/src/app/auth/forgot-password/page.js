@@ -13,16 +13,18 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 transition-colors duration-200">
-      <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-xl shadow-slate-100/50 dark:shadow-none">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#18191e] px-4 transition-colors duration-200">
+      <div className="w-full max-w-md bg-white dark:bg-[#1e1f25] border border-slate-200 dark:border-slate-800/40 rounded-[2rem] p-8 shadow-xl">
         
         {/* Header */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-extrabold text-2xl mb-4 shadow-lg shadow-indigo-500/30">
-            T
+          {/* Logo with split white/red background matching the brand design system */}
+          <div className="w-12 h-12 rounded-full border-2 border-[#ff3b30] overflow-hidden flex shadow-md mb-4">
+            <div className="w-1/2 h-full bg-white flex items-center justify-end text-black font-extrabold text-xl pr-[1px]">T</div>
+            <div className="w-1/2 h-full bg-[#ff3b30] flex items-center justify-start text-white font-extrabold text-xl pl-[1px]">F</div>
           </div>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100">Reset Password</h2>
-          <p className="text-slate-400 dark:text-slate-500 text-sm mt-1">Recover access to your account</p>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Reset Password</h2>
+          <p className="text-slate-550 dark:text-slate-400 text-sm mt-1">Recover access to your account</p>
         </div>
 
         {submitted ? (
@@ -36,38 +38,38 @@ export default function ForgotPasswordPage() {
             
             <Link
               href="/auth/login"
-              className="inline-block w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-2xl py-3.5 shadow-lg shadow-indigo-500/20 transition-all"
+              className="inline-block w-full text-center bg-[#ff3b30] hover:bg-[#e02d22] text-white font-semibold text-sm rounded-2xl py-3.5 shadow-lg shadow-red-500/10 transition-all animate-pulse"
             >
               Return to Login
             </Link>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-normal">
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-normal font-medium">
               Enter the email address associated with your account and we will email you a link to reset your password.
             </p>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">Email Address</label>
+              <label className="block text-xs font-semibold text-slate-500 dark:text-slate-450 mb-2">Email Address</label>
               <input
                 type="email"
                 placeholder="e.g. member@teamflow.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-900 dark:text-white"
                 required
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 text-white font-semibold text-sm rounded-2xl py-3.5 shadow-lg shadow-indigo-500/20 active:scale-[0.98] transition-all"
+              className="w-full bg-[#ff3b30] hover:bg-[#e02d22] text-white font-semibold text-sm rounded-2xl py-3.5 shadow-lg shadow-red-500/10 active:scale-[0.98] transition-all"
             >
               Send Reset Link
             </button>
 
             <div className="text-center pt-2">
-              <Link href="/auth/login" className="text-xs text-indigo-500 hover:underline font-semibold">
+              <Link href="/auth/login" className="text-xs text-[#ff3b30] hover:underline font-semibold">
                 Back to Sign In
               </Link>
             </div>
