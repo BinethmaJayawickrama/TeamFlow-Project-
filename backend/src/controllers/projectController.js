@@ -62,6 +62,14 @@ const getProjects = async (req, res) => {
           creator: {
             select: { id: true, email: true, firstName: true, lastName: true },
           },
+          tasks: {
+            include: {
+              assignee: {
+                select: { id: true, email: true, firstName: true, lastName: true, avatar: true },
+              },
+            },
+            orderBy: { createdAt: 'desc' },
+          },
           _count: { select: { members: true, tasks: true } },
         },
       });
@@ -78,31 +86,33 @@ const getProjects = async (req, res) => {
           creator: {
             select: { id: true, email: true, firstName: true, lastName: true },
           },
+          tasks: {
+            include: {
+              assignee: {
+                select: { id: true, email: true, firstName: true, lastName: true, avatar: true },
+              },
+            },
+            orderBy: { createdAt: 'desc' },
+          },
           _count: { select: { members: true, tasks: true } },
         },
       });
     }
 
     // Enhance response with progress calculations
-    const projectsWithProgress = await Promise.all(
-      projects.map(async (project) => {
-        const tasks = await prisma.task.findMany({
-          where: { projectId: project.id },
-          select: { status: true },
-        });
+    const projectsWithProgress = projects.map((project) => {
+      const tasks = project.tasks || [];
+      const totalTasks = tasks.length;
+      const completedTasks = tasks.filter((t) => t.status === 'COMPLETED').length;
+      const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
-        const totalTasks = tasks.length;
-        const completedTasks = tasks.filter((t) => t.status === 'COMPLETED').length;
-        const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-
-        return {
-          ...project,
-          progress,
-          totalTasks,
-          completedTasks,
-        };
-      })
-    );
+      return {
+        ...project,
+        progress,
+        totalTasks,
+        completedTasks,
+      };
+    });
 
     res.json({ projects: projectsWithProgress });
   } catch (error) {
