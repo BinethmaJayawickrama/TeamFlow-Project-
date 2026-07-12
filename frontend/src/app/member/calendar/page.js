@@ -104,7 +104,7 @@ export default function MemberCalendar() {
   };
 
   return (
-    <RouteGuard allowedRoles={['TEAM_MEMBER']}>
+    <RouteGuard allowedRoles={['TEAM_MEMBER', 'PROJECT_MANAGER']}>
       <Layout>
         {/* Outer Directory Container - Theme matching deep bg */}
         <div className="space-y-8 bg-white dark:bg-[#18191e] text-slate-900 dark:text-white p-2 rounded-[2rem] border border-slate-200 dark:border-slate-800/40 relative overflow-hidden font-sans transition-colors duration-200 min-h-[80vh] pb-12">

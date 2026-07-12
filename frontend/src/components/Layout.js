@@ -117,6 +117,9 @@ export default function Layout({ children }) {
       return [
         ...base,
         { name: 'Projects', path: '/pm/projects', icon: FolderKanban },
+        { name: 'My Tasks', path: '/member/tasks', icon: CheckSquare },
+        { name: 'Kanban Board', path: '/member/board', icon: FolderKanban },
+        { name: 'Calendar', path: '/member/calendar', icon: Calendar },
         { name: 'Reports', path: '/pm/reports', icon: FileSpreadsheet }
       ];
     }
