@@ -112,30 +112,6 @@ export default function AdminDashboard() {
       };
     });
   };
-
-  const weeklySparkline = getWeeklySparklineData();
-  const projectTimelines = getProjectTimelineSchedules();
-
-  const DONUT_COLORS = ['#ff3b30', '#ff9500', '#ffcc00', '#3b82f6'];
-  const STATUS_COLORS = {
-    'TODO': '#ff3b30',
-    'IN_PROGRESS': '#ff9500',
-    'REVIEW': '#3b82f6',
-    'COMPLETED': '#10b981'
-  };
-
-  const activeUsers = usersList.filter(u => u.isActive).length;
-  const pmRoster = usersList.filter(u => u.role === 'PROJECT_MANAGER' || u.role === 'ADMIN');
-  const totalTasks = charts.tasksByStatus.reduce((acc, t) => acc + t.value, 0) || stats.pendingTasks;
-
-  // Chart theme colors mapping
-  const isDark = theme === 'dark';
-  const gridStroke = isDark ? '#1b1c22' : '#e2e8f0';
-  const axisStroke = isDark ? '#475569' : '#94a3b8';
-  const tooltipBg = isDark ? '#1c1d21' : '#ffffff';
-  const tooltipBorder = isDark ? 'rgba(255, 255, 255, 0.08)' : '#cbd5e1';
-  const tooltipColor = isDark ? '#ffffff' : '#0f172a';
-
   if (loading) {
     return (
       <RouteGuard allowedRoles={['ADMIN']}>
@@ -150,6 +126,29 @@ export default function AdminDashboard() {
       </RouteGuard>
     );
   }
+
+  const weeklySparkline = getWeeklySparklineData();
+  const projectTimelines = getProjectTimelineSchedules();
+
+  const DONUT_COLORS = ['#ff3b30', '#ff9500', '#ffcc00', '#3b82f6'];
+  const STATUS_COLORS = {
+    'TODO': '#ff3b30',
+    'IN_PROGRESS': '#ff9500',
+    'REVIEW': '#3b82f6',
+    'COMPLETED': '#10b981'
+  };
+
+  const activeUsers = usersList.filter(u => u.isActive).length;
+  const pmRoster = usersList.filter(u => u.role === 'PROJECT_MANAGER' || u.role === 'ADMIN');
+  const totalTasks = charts.tasksByStatus?.reduce((acc, t) => acc + t.value, 0) || stats.pendingTasks;
+
+  // Chart theme colors mapping
+  const isDark = theme === 'dark';
+  const gridStroke = isDark ? '#1b1c22' : '#e2e8f0';
+  const axisStroke = isDark ? '#475569' : '#94a3b8';
+  const tooltipBg = isDark ? '#1c1d21' : '#ffffff';
+  const tooltipBorder = isDark ? 'rgba(255, 255, 255, 0.08)' : '#cbd5e1';
+  const tooltipColor = isDark ? '#ffffff' : '#0f172a';
 
   return (
     <RouteGuard allowedRoles={['ADMIN']}>

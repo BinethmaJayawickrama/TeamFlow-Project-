@@ -47,12 +47,19 @@ export default function Layout({ children }) {
     }
   }, [user]);
 
+  const [lastViewedAt, setLastViewedAt] = useState(null);
+
   // Sync profile form when user context updates
   useEffect(() => {
     if (user) {
       setFirstName(user.firstName);
       setLastName(user.lastName);
       setAvatar(user.avatar || '');
+      // Initialize last viewed time from local storage or set now
+      const stored = localStorage.getItem(`last_viewed_notifs_${user.id}`);
+      if (stored) {
+        setLastViewedAt(new Date(stored));
+      }
     }
   }, [user]);
 
@@ -109,7 +116,7 @@ export default function Layout({ children }) {
         ...base,
         { name: 'Users', path: '/admin/users', icon: Users },
         { name: 'Projects', path: '/admin/projects', icon: FolderKanban },
-        { name: 'Activity Logs', path: '/admin/activity-logs', icon: History }
+        { name: 'Activity Logs', path: '/admin/activity-logs', icon: FileSpreadsheet }
       ];
     }
 
@@ -118,7 +125,7 @@ export default function Layout({ children }) {
         ...base,
         { name: 'Projects', path: '/pm/projects', icon: FolderKanban },
         { name: 'My Tasks', path: '/member/tasks', icon: CheckSquare },
-        { name: 'Kanban Board', path: '/member/board', icon: FolderKanban },
+        { name: 'Kanban Board', path: '/member/board', icon: CheckSquare },
         { name: 'Calendar', path: '/member/calendar', icon: Calendar },
         { name: 'Reports', path: '/pm/reports', icon: FileSpreadsheet }
       ];
@@ -128,7 +135,7 @@ export default function Layout({ children }) {
       return [
         ...base,
         { name: 'My Tasks', path: '/member/tasks', icon: CheckSquare },
-        { name: 'Kanban Board', path: '/member/board', icon: FolderKanban },
+        { name: 'Kanban Board', path: '/member/board', icon: CheckSquare },
         { name: 'Calendar', path: '/member/calendar', icon: Calendar }
       ];
     }
@@ -136,77 +143,77 @@ export default function Layout({ children }) {
     return base;
   };
 
-  const navLinks = getNavLinks();
+  const activeLinks = getNavLinks();
   const unreadNotifications = notifications.filter(n => !n.isRead);
 
   return (
-    <div className="min-h-screen flex bg-slate-50 dark:bg-[#18191e] transition-colors duration-200">
+    <div className="flex h-screen bg-slate-50 dark:bg-[#121318] text-slate-800 dark:text-slate-100 transition-colors duration-200">
       
-      {/* Sidebar - Left Navigation */}
-      <aside className={`fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-[#111216] border-r border-slate-200 dark:border-slate-800/80 transition-transform duration-300 transform lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        
-        {/* Sidebar Header Brand */}
-        <div className="h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800/85">
-          <div className="flex items-center gap-2.5">
-            {/* Split color circle logo matching the uploaded image logo */}
-            <div className="w-8 h-8 rounded-full border-2 border-[#ff3b30]/80 overflow-hidden flex shadow-sm">
-              <div className="w-1/2 h-full bg-white"></div>
-              <div className="w-1/2 h-full bg-[#ff3b30]"></div>
+      {/* Sidebar navigation */}
+      <aside className={`fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-[#111216] border-r border-slate-200 dark:border-slate-800/80 p-6 flex flex-col justify-between transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="space-y-8">
+          {/* Logo representation */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#ff3b30] to-[#ff9500] flex items-center justify-center font-black text-white text-base shadow-lg shadow-red-500/10">
+                T
+              </div>
+              <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-white">
+                Team<span className="text-[#ff3b30]">Flow</span>
+              </span>
             </div>
-            <span className="font-extrabold text-xl tracking-tight text-slate-850 dark:text-white">TeamFlow</span>
+            <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-slate-400 hover:text-slate-650">
+              <X size={18} />
+            </button>
           </div>
-          <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
-            <X size={20} />
-          </button>
+
+          <nav className="space-y-1">
+            {activeLinks.map((link) => {
+              const Icon = link.icon;
+              const active = pathname === link.path;
+              return (
+                <button
+                  key={link.name}
+                  onClick={() => {
+                    router.push(link.path);
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${active ? 'bg-red-500/5 dark:bg-[#ff3b30]/10 text-[#ff3b30]' : 'text-slate-500 dark:text-slate-450 hover:bg-slate-50 dark:hover:bg-[#1e1f25]'}`}
+                >
+                  <Icon size={16} />
+                  <span>{link.name}</span>
+                </button>
+              );
+            })}
+          </nav>
         </div>
 
-        {/* Sidebar Links */}
-        <nav className="p-4 space-y-1 overflow-y-auto h-[calc(100vh-140px)]">
-          {navLinks.map((link) => {
-            const Icon = link.icon;
-            const isActive = pathname === link.path;
-            return (
-              <button
-                key={link.path}
-                onClick={() => {
-                  router.push(link.path);
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all duration-150 ${
-                  isActive 
-                    ? 'bg-[#ff3b30]/10 text-[#ff3b30] border-l-4 border-[#ff3b30] pl-3' 
-                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1e1f25]/50 hover:text-slate-800 dark:hover:text-white'
-                }`}
-              >
-                <Icon size={16} className={isActive ? 'text-[#ff3b30]' : 'text-slate-400 dark:text-slate-500'} />
-                <span>{link.name}</span>
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Sidebar Bottom Actions */}
-        <div className="absolute bottom-0 inset-x-0 p-4 border-t border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#111216] flex items-center justify-between">
-          <button
+        <div className="border-t border-slate-150 dark:border-slate-800/60 pt-4 space-y-4">
+          <button 
             onClick={toggleTheme}
-            className="p-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-            title="Toggle theme"
+            className="w-full flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-[#1e1f25] text-xs font-bold text-slate-500 dark:text-slate-450 transition-colors"
           >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            <span className="flex items-center gap-3.5">
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+            </span>
           </button>
-          
-          <button
-            onClick={logout}
-            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-[#ff3b30] hover:bg-red-50 dark:hover:bg-red-950/20 font-bold text-xs uppercase tracking-wider transition-colors"
-          >
-            <LogOut size={16} />
-            <span>Sign Out</span>
-          </button>
+
+          {user && (
+            <button 
+              onClick={logout}
+              className="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl hover:bg-red-50 dark:hover:bg-red-950/10 text-xs font-bold text-rose-500 transition-colors"
+            >
+              <LogOut size={16} />
+              <span>Logout</span>
+            </button>
+          )}
         </div>
       </aside>
 
-      {/* Main Container */}
-      <div className="flex-1 lg:pl-64 flex flex-col min-h-screen">
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
+        
         {/* Top Header */}
         <header className="h-16 flex items-center justify-between px-6 bg-white dark:bg-[#111216] border-b border-slate-200 dark:border-slate-800/80 sticky top-0 z-30">
           <div className="flex items-center gap-4">
@@ -219,7 +226,9 @@ export default function Layout({ children }) {
             {/* Notifications */}
             <div className="relative">
               <button 
-                onClick={() => setNotificationsOpen(!notificationsOpen)}
+                onClick={() => {
+                  setNotificationsOpen(!notificationsOpen);
+                }}
                 className="p-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1e1f25] transition-colors relative"
               >
                 <Bell size={18} />
@@ -246,23 +255,32 @@ export default function Layout({ children }) {
                       {notifications.length === 0 ? (
                         <div className="p-8 text-center text-slate-400 dark:text-slate-500 text-xs">No notifications.</div>
                       ) : (
-                        notifications.map((n) => (
-                          <div 
-                            key={n.id} 
-                            onClick={() => handleMarkAsRead(n.id)}
-                            className={`p-4 flex items-start gap-3 cursor-pointer transition-colors ${n.isRead ? 'opacity-60 hover:bg-slate-50 dark:hover:bg-slate-800/30' : 'bg-slate-50/50 dark:bg-[#ff3b30]/5 hover:bg-slate-50 dark:hover:bg-slate-850'}`}
-                          >
-                            <div className="mt-0.5 text-[#ff3b30]">
-                              <CheckCircle2 size={14} />
+                        notifications.map((n) => {
+                          // Check if notification is newer than the last drawer view session
+                          const isNew = lastViewedAt && new Date(n.createdAt) > lastViewedAt;
+                          return (
+                            <div 
+                              key={n.id} 
+                              onClick={() => handleMarkAsRead(n.id)}
+                              className={`p-4 flex items-start gap-3 cursor-pointer transition-colors relative ${n.isRead ? 'opacity-60 hover:bg-slate-50 dark:hover:bg-slate-800/30' : 'bg-slate-50/50 dark:bg-[#ff3b30]/5 hover:bg-slate-50 dark:hover:bg-slate-850 font-bold'}`}
+                            >
+                              <div className="mt-0.5 text-[#ff3b30]">
+                                <CheckCircle2 size={14} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-1.5">
+                                  <p className={`text-xs leading-normal flex-1 ${n.isRead ? 'text-slate-650 dark:text-slate-350' : 'text-slate-950 dark:text-white font-extrabold'}`}>{n.content}</p>
+                                  {isNew && (
+                                    <span className="w-2 h-2 rounded-full bg-[#ff9500] shrink-0 animate-ping" title="New notification since last view" />
+                                  )}
+                                </div>
+                                <span className="text-[9px] text-slate-400 dark:text-slate-550 block mt-1 font-semibold">
+                                  {new Date(n.createdAt).toLocaleDateString()}
+                                </span>
+                              </div>
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-xs text-slate-800 dark:text-slate-200 leading-normal">{n.content}</p>
-                              <span className="text-[9px] text-slate-400 dark:text-slate-500 block mt-1">
-                                {new Date(n.createdAt).toLocaleDateString()}
-                              </span>
-                            </div>
-                          </div>
-                        ))
+                          );
+                        })
                       )}
                     </div>
                   </div>
