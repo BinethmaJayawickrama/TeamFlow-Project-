@@ -155,8 +155,11 @@ export default function Layout({ children }) {
           {/* Logo representation */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#ff3b30] to-[#ff9500] flex items-center justify-center font-black text-white text-base shadow-lg shadow-red-500/10">
-                T
+              <div className="w-10 h-10 rounded-full border-2 border-[#ff3b30] flex items-center justify-center bg-transparent">
+                <div className="flex items-baseline font-light text-xl select-none leading-none">
+                  <span className="text-slate-900 dark:text-white font-normal">T</span>
+                  <span className="text-[#ff3b30] -ml-0.5">F</span>
+                </div>
               </div>
               <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-white">
                 Team<span className="text-[#ff3b30]">Flow</span>
