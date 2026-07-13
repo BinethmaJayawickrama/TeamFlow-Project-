@@ -233,7 +233,7 @@ export default function Layout({ children }) {
               >
                 <Bell size={18} />
                 {unreadNotifications.length > 0 && (
-                  <span className="absolute top-1.5 right-1.5 w-3.5 h-3.5 bg-[#ff3b30] text-white rounded-full text-[9px] font-bold flex items-center justify-center animate-pulse">
+                  <span className="absolute top-1.5 right-1.5 w-3.5 h-3.5 bg-[#ff3b30] text-white rounded-full text-[9px] font-bold flex items-center justify-center">
                     {unreadNotifications.length}
                   </span>
                 )}
