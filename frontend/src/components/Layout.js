@@ -39,11 +39,41 @@ export default function Layout({ children }) {
     }
   };
 
+  // Socket Connection and live updates
   useEffect(() => {
     if (user) {
       fetchNotifications();
-      const interval = setInterval(fetchNotifications, 30000);
-      return () => clearInterval(interval);
+      const interval = setInterval(fetchNotifications, 45000); // Back-up polling
+
+      // Setup live WebSockets connection
+      const { io } = require('socket.io-client');
+      const socket = io(process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000');
+
+      socket.on('connect', () => {
+        console.log('Connected to notification socket server');
+        socket.emit('join_user_room', user.id);
+      });
+
+      socket.on('new_notification', (notification) => {
+        console.log('Live Socket notification received:', notification);
+        setNotifications((prev) => [notification, ...prev]);
+        
+        // Show browser tab alert if supported
+        if (Notification.permission === 'granted') {
+          new Notification('TeamFlow Alert', { body: notification.content });
+        } else if (Notification.permission !== 'denied') {
+          Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+              new Notification('TeamFlow Alert', { body: notification.content });
+            }
+          });
+        }
+      });
+
+      return () => {
+        clearInterval(interval);
+        socket.disconnect();
+      };
     }
   }, [user]);
 

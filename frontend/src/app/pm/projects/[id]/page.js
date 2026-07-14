@@ -173,6 +173,9 @@ export default function PMProjectWorkspace({ params }) {
     setEditTaskModalOpen(true);
   };
 
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const handleSaveTask = async (e) => {
     e.preventDefault();
     setModalError('');
@@ -190,15 +193,31 @@ export default function PMProjectWorkspace({ params }) {
         dueDate: editDueDate ? new Date(editDueDate).toISOString() : null,
         assigneeId: editAssigneeId ? parseInt(editAssigneeId) : null,
       });
+
+      // Handle file upload if present
+      if (selectedFile) {
+        setUploading(true);
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        await api.post(`/tasks/${editingTask.id}/attachments`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        setSelectedFile(null);
+      }
+
       setModalSuccess('Task updated successfully!');
       fetchProjectDetails();
       setTimeout(() => {
         setEditTaskModalOpen(false);
         setEditingTask(null);
         setModalSuccess('');
+        setUploading(false);
       }, 800);
     } catch (err) {
       setModalError(err.response?.data?.message || 'Failed to update task.');
+      setUploading(false);
     }
   };
 
@@ -698,6 +717,32 @@ export default function PMProjectWorkspace({ params }) {
                         className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/10 focus:border-[#ff9500] text-slate-900 dark:text-white"
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Add File Attachment</label>
+                    <input
+                      type="file"
+                      onChange={(e) => setSelectedFile(e.target.files[0] || null)}
+                      className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs font-semibold text-slate-500"
+                    />
+                    {editingTask.attachments && editingTask.attachments.length > 0 && (
+                      <div className="mt-3 space-y-1.5">
+                        <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Uploaded Attachments ({editingTask.attachments.length})</span>
+                        {editingTask.attachments.map((file) => (
+                          <a 
+                            key={file.id} 
+                            href={`${process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000'}${file.fileUrl}`} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="flex items-center justify-between p-2 rounded-xl bg-slate-50 hover:bg-slate-100 dark:bg-[#18191e]/50 dark:hover:bg-[#18191e] border border-slate-200 dark:border-slate-800 text-[10px] font-bold text-[#ff9500] transition-colors"
+                          >
+                            <span>📎 {file.fileName}</span>
+                            <span className="text-[8px] opacity-60 uppercase">Open ↗</span>
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {modalError && <p className="text-xs text-rose-500 font-semibold">{modalError}</p>}
