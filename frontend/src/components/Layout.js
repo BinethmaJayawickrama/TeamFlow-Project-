@@ -48,6 +48,7 @@ export default function Layout({ children }) {
   }, [user]);
 
   const [lastViewedAt, setLastViewedAt] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
 
   // Sync profile form when user context updates
   useEffect(() => {
@@ -62,6 +63,38 @@ export default function Layout({ children }) {
       }
     }
   }, [user]);
+
+  // Track window scroll to collapse header profile details
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 40) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Simple name-based gender/avatar resolver for fallback profile pictures
+  const getAvatarUrl = (userObj) => {
+    if (!userObj) return '';
+    if (userObj.avatar && userObj.avatar.trim() !== '') return userObj.avatar;
+    
+    // List of typical female/male names to make a random-guess avatar selection
+    const femaleNames = ['binethma', 'jane', 'mary', 'alice', 'sarah', 'emily', 'anna', 'lisa', 'sophie', 'chloe', 'olivia', 'emma', 'isabella', 'mia'];
+    const nameLower = userObj.firstName.toLowerCase();
+    
+    const isFemale = femaleNames.some(f => nameLower.includes(f) || nameLower.endsWith('a'));
+    
+    // Return cute clean SVG/PNG avatars matching guessed profile gender
+    if (isFemale) {
+      return `https://api.dicebear.com/7.x/adventurer/svg?seed=${userObj.firstName}&gender=female&hairColor=ffd530,e1b305,623b1c,a55728&eyes=variant02,variant04`;
+    } else {
+      return `https://api.dicebear.com/7.x/adventurer/svg?seed=${userObj.firstName}&gender=male&hairColor=2c1b18,a55728,b56f3f&eyes=variant01,variant03`;
+    }
+  };
 
   const handleMarkAsRead = async (id) => {
     try {
@@ -295,18 +328,14 @@ export default function Layout({ children }) {
             {user && (
               <button 
                 onClick={() => setProfileModalOpen(true)}
-                className="flex items-center gap-3 p-1 pr-3 rounded-2xl hover:bg-slate-100 dark:hover:bg-[#1e1f25] transition-colors border border-slate-250 dark:border-slate-800"
+                className={`flex items-center gap-3 p-1 rounded-2xl hover:bg-slate-100 dark:hover:bg-[#1e1f25] transition-all duration-300 border border-slate-250 dark:border-slate-800 ${scrolled ? 'pr-1' : 'pr-3'}`}
               >
-                <div className="w-8 h-8 rounded-xl bg-red-50 dark:bg-red-950/20 text-[#ff3b30] flex items-center justify-center font-extrabold text-xs overflow-hidden">
-                  {user.avatar ? (
-                    <img src={user.avatar} alt={user.firstName} className="w-full h-full object-cover" />
-                  ) : (
-                    user.firstName[0] + user.lastName[0]
-                  )}
+                <div className="w-8 h-8 rounded-xl bg-red-50 dark:bg-red-950/20 text-[#ff3b30] flex items-center justify-center font-extrabold text-xs overflow-hidden border border-red-150/40 dark:border-red-950/40">
+                  <img src={getAvatarUrl(user)} alt={user.firstName} className="w-full h-full object-cover" />
                 </div>
-                <div className="text-left hidden sm:block">
-                  <p className="font-bold text-xs text-slate-700 dark:text-slate-200 leading-tight">{user.firstName} {user.lastName}</p>
-                  <p className="text-[8px] text-slate-400 uppercase tracking-widest mt-0.5">{user.role.replace('_', ' ')}</p>
+                <div className={`text-left overflow-hidden transition-all duration-300 ${scrolled ? 'w-0 opacity-0 pointer-events-none' : 'w-auto opacity-100'}`}>
+                  <p className="font-bold text-xs text-slate-700 dark:text-slate-200 leading-tight whitespace-nowrap">{user.firstName} {user.lastName}</p>
+                  <p className="text-[8px] text-slate-450 uppercase tracking-widest mt-0.5 whitespace-nowrap">{user.role.replace('_', ' ')}</p>
                 </div>
               </button>
             )}
@@ -349,17 +378,6 @@ export default function Layout({ children }) {
                 />
               </div>
 
-              <div>
-                <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Avatar Image URL (Optional)</label>
-                <input 
-                  type="text" 
-                  value={avatar} 
-                  onChange={(e) => setAvatar(e.target.value)} 
-                  placeholder="https://example.com/avatar.jpg"
-                  className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2" 
-                />
-              </div>
-
               {profileError && <p className="text-xs text-[#ff3b30] font-semibold">{profileError}</p>}
               {profileSuccess && <p className="text-xs text-emerald-500 font-semibold">{profileSuccess}</p>}
 
@@ -373,7 +391,7 @@ export default function Layout({ children }) {
                 </button>
                 <button 
                   type="submit" 
-                  className="px-4.5 py-2.5 text-xs font-bold text-white bg-[#ff3b30] hover:bg-[#e02d22] rounded-xl shadow-lg shadow-red-500/10 transition-all"
+                  className="px-6 py-2.5 text-xs font-bold text-white bg-[#ff3b30] hover:bg-[#e02d22] rounded-xl shadow-lg shadow-red-500/10 transition-all"
                 >
                   Save Changes
                 </button>
