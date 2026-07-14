@@ -74,12 +74,16 @@ const createTask = async (req, res) => {
 
     // Send notification to assignee
     if (parsedAssigneeId) {
-      await prisma.notification.create({
+      const notif = await prisma.notification.create({
         data: {
           content: `New task assigned: "${title}" in project "${project.name}".`,
           userId: parsedAssigneeId,
         },
       });
+      
+      // Emit socket notification
+      const { sendLiveNotification } = require('../services/socket');
+      sendLiveNotification(parsedAssigneeId, notif);
     }
 
     res.status(201).json({ task });
@@ -249,6 +253,7 @@ const updateTask = async (req, res) => {
     });
 
     // Logging & Notifications
+    const { sendLiveNotification } = require('../services/socket');
     const actions = [];
     if (status && status !== task.status) {
       actions.push(`changed status of task "${task.title}" to "${status}"`);
@@ -256,20 +261,22 @@ const updateTask = async (req, res) => {
       // Notify PM and Assignee if it's completed
       if (status === 'COMPLETED') {
         if (task.assigneeId && task.assigneeId !== req.user.id) {
-          await prisma.notification.create({
+          const notif = await prisma.notification.create({
             data: {
               content: `Task "${task.title}" has been completed by ${req.user.firstName}.`,
               userId: task.assigneeId,
             },
           });
+          sendLiveNotification(task.assigneeId, notif);
         }
         if (task.project.creatorId !== req.user.id) {
-          await prisma.notification.create({
+          const notif = await prisma.notification.create({
             data: {
               content: `Task "${task.title}" in project "${task.project.name}" is completed.`,
               userId: task.project.creatorId,
             },
           });
+          sendLiveNotification(task.project.creatorId, notif);
         }
       }
     }
@@ -277,12 +284,13 @@ const updateTask = async (req, res) => {
     if (parsedAssigneeId !== undefined && parsedAssigneeId !== task.assigneeId) {
       actions.push(`reassigned task "${task.title}"`);
       if (parsedAssigneeId) {
-        await prisma.notification.create({
+        const notif = await prisma.notification.create({
           data: {
             content: `You have been assigned to task: "${task.title}".`,
             userId: parsedAssigneeId,
           },
         });
+        sendLiveNotification(parsedAssigneeId, notif);
       }
     }
 
