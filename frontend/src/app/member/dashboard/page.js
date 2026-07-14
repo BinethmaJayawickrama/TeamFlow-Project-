@@ -165,7 +165,7 @@ export default function MemberDashboard() {
               
               {/* Due Today Alerts */}
               {tasksDueToday.length > 0 && (
-                <div className="bg-amber-50/50 dark:bg-amber-955/20 border border-amber-200 dark:border-amber-900/50 p-6 rounded-3xl space-y-4">
+                <div className="bg-amber-500/5 dark:bg-amber-500/10 border border-amber-200/60 dark:border-[#ff9500]/20 p-6 rounded-3xl space-y-4">
                   <h3 className="font-bold text-xs uppercase tracking-wider text-[#ff9500] flex items-center gap-2">
                     <AlertCircle size={16} />
                     Due Today Alerts
