@@ -494,7 +494,7 @@ export default function AdminDashboard() {
                     logs.map((log) => (
                       <div key={log.id} className="text-xs bg-slate-50 dark:bg-[#1c1d21]/30 border border-slate-200 dark:border-slate-800/50 p-3.5 rounded-2xl flex items-center justify-between gap-4">
                         <div className="space-y-1">
-                          <p className="font-bold text-slate-800 dark:text-slate-250 leading-relaxed">{log.action}</p>
+                          <p className="font-bold text-slate-800 dark:text-slate-200 leading-relaxed">{log.action}</p>
                           <span className="text-[9px] text-slate-400 dark:text-slate-500 block">
                             {new Date(log.createdAt).toLocaleString()}
                           </span>
@@ -506,7 +506,9 @@ export default function AdminDashboard() {
               </div>
             )}
 
-                    {/* RIGHT SIDEBAR PANEL - Only rendered in Overview tab */}
+          </div>
+
+          {/* RIGHT SIDEBAR PANEL - Only rendered in Overview tab */}
           {activeTab === 'overview' && (
             <div className="w-full xl:w-72 bg-slate-50/50 dark:bg-[#1c1d21]/60 border-t xl:border-t-0 xl:border-l border-slate-200 dark:border-slate-800/40 p-4 rounded-[2rem] space-y-6 transition-colors">
               
@@ -577,7 +579,7 @@ export default function AdminDashboard() {
             </div>
           )}
 
-        </div>  </div>
+        </div>
       </Layout>
     </RouteGuard>
   );
