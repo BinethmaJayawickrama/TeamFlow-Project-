@@ -5,7 +5,7 @@ import RouteGuard from '../../../components/RouteGuard';
 import Layout from '../../../components/Layout';
 import api from '../../../services/api';
 import { useRouter } from 'next/navigation';
-import { Plus, Calendar, ArrowRight, FolderKanban } from 'lucide-react';
+import { Plus, Calendar, ArrowRight, FolderKanban, Trash2 } from 'lucide-react';
 
 export default function PMProjects() {
   const [projects, setProjects] = useState([]);
@@ -61,6 +61,16 @@ export default function PMProjects() {
       }, 1000);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create project.');
+    }
+  };
+
+  const handleDelete = async (projectId) => {
+    if (!window.confirm('Delete this project permanently? This will remove all tasks and member records.')) return;
+    try {
+      await api.delete(`/projects/${projectId}`);
+      fetchProjects();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to delete project.');
     }
   };
 
@@ -144,9 +154,13 @@ export default function PMProjects() {
                       ></div>
                     </div>
                     <div className="flex justify-between items-center mt-4">
-                      <div className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold">
-                        <span>{project._count?.members || 0} assigned member(s)</span>
-                      </div>
+                      <button
+                        onClick={() => handleDelete(project.id)}
+                        className="p-1.5 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/20 text-slate-400 hover:text-[#ff3b30] transition-colors"
+                        title="Delete Project"
+                      >
+                        <Trash2 size={15} />
+                      </button>
                       
                       <button
                         onClick={() => router.push(`/pm/projects/${project.id}`)}

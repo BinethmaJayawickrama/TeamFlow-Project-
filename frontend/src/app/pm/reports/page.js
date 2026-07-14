@@ -6,7 +6,7 @@ import Layout from '../../../components/Layout';
 import api from '../../../services/api';
 import { 
   FileSpreadsheet, ClipboardList, CheckCircle2, 
-  Clock, AlertTriangle, TrendingUp, User 
+  Clock, AlertTriangle, TrendingUp, User, FileDown 
 } from 'lucide-react';
 
 export default function PMReports() {
@@ -71,8 +71,17 @@ export default function PMReports() {
             
             {/* Project Selection Dropdown */}
             {!loadingProjects && projects.length > 0 && (
-              <div className="flex items-center gap-2.5">
-                <span className="text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-widest hidden md:inline">Select Project:</span>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => window.print()}
+                  className="flex items-center gap-2 bg-slate-50 hover:bg-slate-100 dark:bg-[#1e1f25]/50 hover:dark:bg-[#1e1f25] border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-xs font-bold text-[#ff3b30] shadow-sm transition-all"
+                  title="Export Report to PDF"
+                >
+                  <FileDown size={15} />
+                  <span>PDF Export</span>
+                </button>
+
+                <span className="text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-widest desert:hidden select-none">Project:</span>
                 <select
                   value={selectedProjectId}
                   onChange={(e) => setSelectedProjectId(e.target.value)}

@@ -39,3 +39,30 @@
 .avatar-overlap {
   margin-left: -8px;
 }
+
+/* Print Media Styles: Hides navigation sidebars/headers during PDF downloads */
+@media print {
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+  /* Hide sidebar nav, top bar headers, selection inputs, and trigger buttons */
+  aside, 
+  nav, 
+  header, 
+  button, 
+  select, 
+  .no-print {
+    display: none !important;
+  }
+  /* Expand main container to use full page footprint width */
+  main,
+  .space-y-8 {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+}
