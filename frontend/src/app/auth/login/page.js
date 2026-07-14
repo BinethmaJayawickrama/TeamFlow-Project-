@@ -29,10 +29,10 @@ export default function LoginPage() {
         
         {/* Header */}
         <div className="flex flex-col items-center mb-8">
-          {/* Logo with split white/red background matching the brand design system */}
-          <div className="w-12 h-12 rounded-full border-2 border-[#ff3b30] overflow-hidden flex shadow-md mb-4">
-            <div className="w-1/2 h-full bg-white flex items-center justify-end text-black font-extrabold text-xl pr-[1px]">T</div>
-            <div className="w-1/2 h-full bg-[#ff3b30] flex items-center justify-start text-white font-extrabold text-xl pl-[1px]">F</div>
+          {/* Logo matches sidebar custom design */}
+          <div className="w-12 h-12 rounded-full border-2 border-[#ff3b30] flex items-center justify-center font-black text-lg select-none shadow-md mb-4 bg-white dark:bg-[#1e1f25]">
+            <span className="text-slate-900 dark:text-white">T</span>
+            <span className="text-[#ff3b30] -ml-0.5">F</span>
           </div>
           <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Welcome to TeamFlow</h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Sign in to manage your workspace</p>

@@ -98,8 +98,8 @@ export default function AdminDashboard() {
   // Project timelines horizontal capsules
   const getProjectTimelineSchedules = () => {
     return allProjects.slice(0, 3).map((proj, i) => {
-      const startPercent = 10 + (i * 15);
-      const widthPercent = Math.max(30, 80 - startPercent);
+      const startPercent = 5 + (i * 10);
+      const widthPercent = Math.max(50, 95 - startPercent);
       const color = i === 1 ? '#ff3b30' : (i === 2 ? '#ffcc00' : '#ff9500');
 
       return {
@@ -361,9 +361,9 @@ export default function AdminDashboard() {
                         </div>
 
                         {projectTimelines.map((proj) => (
-                          <div key={proj.id} className="relative h-6 flex items-center group">
+                          <div key={proj.id} className="relative h-8 flex items-center group">
                             <div 
-                              className="absolute h-3 rounded-full flex items-center justify-center text-[8.5px] text-black font-extrabold transition-all group-hover:opacity-90 overflow-hidden px-2 truncate"
+                              className="absolute h-5 rounded-full flex items-center justify-center text-[8.5px] text-black font-extrabold transition-all group-hover:opacity-90 overflow-hidden px-2 truncate"
                               style={{ 
                                 left: proj.startPercent, 
                                 width: proj.widthPercent,

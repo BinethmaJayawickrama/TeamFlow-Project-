@@ -90,8 +90,8 @@ export default function PMDashboard() {
 
   // Timeline capsules for top 3 projects
   const projectTimelines = allProjects.slice(0, 3).map((proj, i) => {
-    const startPercent = 10 + i * 15;
-    const widthPercent = Math.max(30, 80 - startPercent);
+    const startPercent = 5 + i * 10;
+    const widthPercent = Math.max(50, 95 - startPercent);
     const color = i === 0 ? '#ff9500' : i === 1 ? '#ff3b30' : '#ffcc00';
     return { id: proj.id, name: proj.name, progress: proj.progress, startPercent: `${startPercent}%`, widthPercent: `${widthPercent}%`, color };
   });
@@ -279,8 +279,8 @@ export default function PMDashboard() {
                           <div>Wk 1</div><div>Wk 2</div><div>Wk 3</div><div>Wk 4</div><div>Wk 5</div><div>Wk 6</div>
                         </div>
                         {projectTimelines.map((proj) => (
-                          <div key={proj.id} className="relative h-6 flex items-center group">
-                            <div className="absolute h-3 rounded-full flex items-center justify-center text-[8.5px] text-black font-extrabold transition-all group-hover:opacity-90 overflow-hidden px-2 truncate" style={{ left: proj.startPercent, width: proj.widthPercent, backgroundColor: proj.color }} title={proj.name}>
+                          <div key={proj.id} className="relative h-8 flex items-center group">
+                            <div className="absolute h-5 rounded-full flex items-center justify-center text-[8.5px] text-black font-extrabold transition-all group-hover:opacity-90 overflow-hidden px-2 truncate" style={{ left: proj.startPercent, width: proj.widthPercent, backgroundColor: proj.color }} title={proj.name}>
                               {proj.name} ({proj.progress}%)
                             </div>
                           </div>
