@@ -166,12 +166,21 @@ export default function Layout({ children }) {
     if (!user) return [];
     
     let dashPath = '/auth/login';
-    if (user.role === 'ADMIN') dashPath = '/admin/dashboard';
-    else if (user.role === 'PROJECT_MANAGER') dashPath = '/pm/dashboard';
-    else if (user.role === 'TEAM_MEMBER') dashPath = '/member/dashboard';
+    let dashName = 'DASHBOARD';
+    
+    if (user.role === 'ADMIN') {
+      dashPath = '/admin/dashboard';
+      dashName = 'ADMIN CONSOLE';
+    } else if (user.role === 'PROJECT_MANAGER') {
+      dashPath = '/pm/dashboard';
+      dashName = 'PM CONSOLE';
+    } else if (user.role === 'TEAM_MEMBER') {
+      dashPath = '/member/dashboard';
+      dashName = 'MEMBER CONSOLE';
+    }
 
     const base = [
-      { name: 'Dashboard', path: dashPath, icon: LayoutDashboard }
+      { name: dashName, path: dashPath, icon: LayoutDashboard }
     ];
 
     if (user.role === 'ADMIN') {
@@ -293,7 +302,12 @@ export default function Layout({ children }) {
             <div className="relative">
               <button 
                 onClick={() => {
-                  setNotificationsOpen(!notificationsOpen);
+                  const targetState = !notificationsOpen;
+                  setNotificationsOpen(targetState);
+                  if (targetState) {
+                    // Mark all notifications as read when clicking the bell icon
+                    handleMarkAllRead();
+                  }
                 }}
                 className="p-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1e1f25] transition-colors relative"
               >
