@@ -87,14 +87,10 @@ const register = async (req, res) => {
 
     const token = generateToken(user);
 
-    // Send real welcome email to user inbox asynchronously using Nodemailer SMTP
-    const { sendWelcomeEmail } = require('../services/email');
-    sendWelcomeEmail(user.email, user.firstName, user.role);
-
     // Track registration in activity log
     await prisma.activityLog.create({
       data: {
-        action: `New user account registered for ${user.firstName} ${user.lastName}. Welcome email dispatched to ${user.email}.`,
+        action: `New user account registered for ${user.firstName} ${user.lastName}.`,
         userId: user.id,
       },
     });
@@ -102,7 +98,6 @@ const register = async (req, res) => {
     const { password: _, ...userWithoutPassword } = user;
     res.status(201).json({
       token,
-      emailSent: true,
       user: userWithoutPassword,
     });
   } catch (error) {

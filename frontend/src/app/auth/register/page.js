@@ -15,8 +15,6 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const [emailSentAlert, setEmailSentAlert] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -31,22 +29,13 @@ export default function RegisterPage() {
         role,
       });
 
-      const { token, user, emailSent } = response.data;
+      const { token, user } = response.data;
       
       localStorage.setItem('teamflow_token', token);
       localStorage.setItem('teamflow_user', JSON.stringify(user));
       
       updateProfile(user);
-
-      if (emailSent) {
-        setEmailSentAlert(true);
-        // Delay redirect briefly to show the confirmation banner
-        setTimeout(() => {
-          redirectDashboard(user.role);
-        }, 3000);
-      } else {
-        redirectDashboard(user.role);
-      }
+      redirectDashboard(user.role);
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Try again.');
       setLoading(false);
@@ -67,14 +56,6 @@ export default function RegisterPage() {
           <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Create Account</h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Get started with TeamFlow workspace</p>
         </div>
-
-        {/* Email Dispatched Alert */}
-        {emailSentAlert && (
-          <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 text-emerald-600 dark:text-emerald-400 text-xs px-4 py-3.5 rounded-2xl mb-6 font-medium leading-relaxed">
-            <strong>📧 Welcome Email Dispatched!</strong>
-            <p className="mt-1">We sent a workspace setup confirmation message to <strong>{email}</strong>.</p>
-          </div>
-        )}
 
         {/* Error Alert */}
         {error && (
@@ -141,12 +122,9 @@ export default function RegisterPage() {
               onChange={(e) => setRole(e.target.value)}
               className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-800 dark:text-white font-semibold transition-colors"
             >
-              <option value="TEAM_MEMBER">Team Collaborator (View tasks & submit status)</option>
-              <option value="PROJECT_MANAGER">Project Manager (Create projects, assign tasks & view reports)</option>
+              <option value="TEAM_MEMBER">Team Collaborator</option>
+              <option value="PROJECT_MANAGER">Project Manager</option>
             </select>
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 leading-relaxed pl-1">
-              💡 <strong>How to choose:</strong> Select <strong>Project Manager</strong> if you need to set up projects and allocate tasks. Select <strong>Team Collaborator</strong> if you are joining an existing team to complete tasks.
-            </p>
           </div>
 
           <button
