@@ -8,7 +8,6 @@ export default function LoginPage() {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedRole, setSelectedRole] = useState(''); // Default empty = use user profile role
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -17,7 +16,7 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
  
-    const result = await login(email, password, selectedRole || null);
+    const result = await login(email, password);
     if (!result.success) {
       setError(result.error);
       setLoading(false);
@@ -75,20 +74,6 @@ export default function LoginPage() {
               className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-900 dark:text-white"
               required
             />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-450 mb-2">Access Workspace As...</label>
-            <select
-              value={selectedRole}
-              onChange={(e) => setSelectedRole(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-800 dark:text-white font-semibold transition-colors"
-            >
-              <option value="">Default Profile Role</option>
-              <option value="TEAM_MEMBER">Team Collaborator Console</option>
-              <option value="PROJECT_MANAGER">Project Manager Console</option>
-              <option value="ADMIN">System Administrator Console</option>
-            </select>
           </div>
 
           <button
