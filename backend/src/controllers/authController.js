@@ -87,13 +87,9 @@ const register = async (req, res) => {
 
     const token = generateToken(user);
 
-    // Simulate sending a confirmation email to the user's provided email address
-    console.log(`========================================`);
-    console.log(`✉️ SIMULATED EMAIL DISPATCHER:`);
-    console.log(`TO: ${user.email}`);
-    console.log(`SUBJECT: Welcome to TeamFlow Workspace, ${user.firstName}!`);
-    console.log(`BODY: Your account has been successfully created. Role: ${user.role}.`);
-    console.log(`========================================`);
+    // Send real welcome email to user inbox asynchronously using Nodemailer SMTP
+    const { sendWelcomeEmail } = require('../services/email');
+    sendWelcomeEmail(user.email, user.firstName, user.role);
 
     // Track registration in activity log
     await prisma.activityLog.create({
