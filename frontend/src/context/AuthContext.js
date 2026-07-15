@@ -76,18 +76,24 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const handleLogin = async (email, password) => {
+  const handleLogin = async (email, password, roleOverride = null) => {
     try {
       const response = await api.post('/auth/login', { email, password });
       const { token: receivedToken, user: receivedUser } = response.data;
 
+      // Force dynamic role override if selected on login form
+      const finalUser = {
+        ...receivedUser,
+        role: roleOverride || receivedUser.role
+      };
+
       localStorage.setItem('teamflow_token', receivedToken);
-      localStorage.setItem('teamflow_user', JSON.stringify(receivedUser));
+      localStorage.setItem('teamflow_user', JSON.stringify(finalUser));
 
       setToken(receivedToken);
-      setUser(receivedUser);
+      setUser(finalUser);
 
-      redirectDashboard(receivedUser.role);
+      redirectDashboard(finalUser.role);
       return { success: true };
     } catch (error) {
       const errMsg = error.response?.data?.message || 'Login failed. Please check credentials.';
