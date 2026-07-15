@@ -6,7 +6,8 @@ import Layout from '../../../../components/Layout';
 import api from '../../../../services/api';
 import { 
   ArrowLeft, Plus, Users, CheckSquare, 
-  Trash2, X, UserMinus, ShieldAlert, Calendar, Pencil 
+  Trash2, X, UserMinus, ShieldAlert, Calendar, Pencil,
+  Paperclip, Download
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -325,7 +326,12 @@ export default function PMProjectWorkspace({ params }) {
                         <div className="space-y-1">
                           <h4 className="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-snug">{task.title}</h4>
                           <div className="flex flex-wrap items-center gap-3 text-[10px] text-slate-400 dark:text-slate-500 mt-2 font-semibold">
-                            <span className="flex items-center gap-1 bg-slate-150 dark:bg-slate-800 px-2 py-0.5 rounded text-[9px] font-bold text-slate-550 dark:text-slate-400 uppercase tracking-wider border border-slate-200 dark:border-slate-700/60">
+                            <span className={`flex items-center gap-1 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border ${
+                              task.status === 'COMPLETED' ? 'bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/30' :
+                              task.status === 'IN_PROGRESS' ? 'bg-blue-50/50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/30' :
+                              task.status === 'REVIEW' ? 'bg-purple-50/50 dark:bg-purple-950/20 text-purple-600 dark:text-purple-400 border-purple-100 dark:border-purple-900/30' :
+                              'bg-amber-50/50 dark:bg-amber-950/20 text-[#ff9500] border-amber-100 dark:border-amber-900/30'
+                            }`}>
                               {task.status.replace('_', ' ')}
                             </span>
                             <span>•</span>
@@ -394,7 +400,6 @@ export default function PMProjectWorkspace({ params }) {
                   <span>{project.totalTasks} total tasks</span>
                 </div>
               </div>
-
               {/* Collaborators Card */}
               <div className="bg-white dark:bg-[#1e1f25] border border-slate-200 dark:border-slate-800/40 rounded-3xl p-6 shadow-sm transition-colors">
                 <div className="flex items-center justify-between mb-4 border-b border-slate-150 dark:border-slate-800/40 pb-2">
@@ -445,6 +450,50 @@ export default function PMProjectWorkspace({ params }) {
                 </div>
               </div>
 
+              {/* Shared Reports & Files Card - Visible to all members */}
+              <div className="bg-white dark:bg-[#1e1f25] border border-slate-200 dark:border-slate-800/40 rounded-3xl p-6 shadow-sm transition-colors">
+                <h3 className="font-bold text-xs uppercase tracking-wider mb-4 border-b border-slate-150 dark:border-slate-800/40 pb-2 flex items-center gap-2 text-slate-850 dark:text-white">
+                  <Paperclip size={16} className="text-[#ff3b30]" />
+                  Shared Reports & Files
+                </h3>
+                <div className="space-y-3 max-h-60 overflow-y-auto pr-1 scrollbar-thin">
+                  {(() => {
+                    const allAttachments = [];
+                    project.tasks.forEach(t => {
+                      if (t.attachments && t.attachments.length > 0) {
+                        t.attachments.forEach(file => {
+                          allAttachments.push({ ...file, taskTitle: t.title });
+                        });
+                      }
+                    });
+                    
+                    if (allAttachments.length === 0) {
+                      return <p className="text-xs text-slate-400 dark:text-slate-500 text-center py-6 font-semibold">No reports or files uploaded yet.</p>;
+                    }
+                    
+                    const backendUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000';
+                    
+                    return allAttachments.map((file) => (
+                      <div key={file.id} className="p-3 border border-slate-150 dark:border-slate-800/60 rounded-xl flex items-center justify-between gap-3 bg-slate-50/50 dark:bg-slate-900/10">
+                        <div className="min-w-0">
+                          <p className="font-bold text-xs text-slate-800 dark:text-slate-200 truncate" title={file.fileName}>{file.fileName}</p>
+                          <p className="text-[8px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wide mt-0.5">Task: {file.taskTitle}</p>
+                        </div>
+                        <a 
+                          href={`${backendUrl}${file.fileUrl}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-lg transition-colors shrink-0"
+                          title="View document"
+                        >
+                          <Download size={12} />
+                        </a>
+                      </div>
+                    ));
+                  })()}
+                </div>
+              </div>
+
             </div>
 
           </div>
@@ -452,14 +501,13 @@ export default function PMProjectWorkspace({ params }) {
           {/* Add Member Modal */}
           {memberModalOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-              <div className="fixed inset-0 bg-slate-950/65 backdrop-blur-sm" onClick={() => setMemberModalOpen(false)}></div>
-              <div className="bg-white dark:bg-[#1e1f25] border border-slate-200 dark:border-slate-800 w-full max-w-sm rounded-3xl p-6.5 shadow-2xl relative z-10 text-slate-900 dark:text-white transition-colors">
+              <div className="fixed inset-0 bg-slate-950/65 backdrop-blur-sm" onClick={() => setMemberModalOpen(false)}></div>              <div className="bg-white dark:bg-[#1e1f25] border border-slate-200 dark:border-slate-800 w-full max-w-sm rounded-3xl p-8 shadow-2xl relative z-10 text-slate-900 dark:text-white transition-colors">
                 <h3 className="font-extrabold text-sm uppercase tracking-wider mb-4 text-slate-850 dark:text-white">Add Project Collaborators</h3>
                 
                 <form onSubmit={handleAddMembers} className="space-y-4">
                   <div className="max-h-60 overflow-y-auto space-y-2 pr-1 scrollbar-thin">
                     {eligibleNonMembers.length === 0 ? (
-                      <p className="text-xs text-slate-400 text-center py-4 font-semibold">No active system users available to add.</p>
+                       <p className="text-xs text-slate-400 text-center py-4 font-semibold">No active system users available to add.</p>
                     ) : (
                       eligibleNonMembers.map((user) => (
                         <div 
@@ -482,7 +530,7 @@ export default function PMProjectWorkspace({ params }) {
                           </div>
                           <div>
                             <p className="font-bold text-xs">{user.firstName} {user.lastName}</p>
-                            <p className="text-[9px] text-slate-400 dark:text-slate-500 font-semibold uppercase tracking-wider">{user.role}</p>
+                            <p className="text-[9px] text-slate-400 dark:text-slate-550 font-semibold uppercase tracking-wider">{user.role}</p>
                           </div>
                         </div>
                       ))
@@ -496,13 +544,13 @@ export default function PMProjectWorkspace({ params }) {
                     <button 
                       type="button" 
                       onClick={() => setMemberModalOpen(false)}
-                      className="px-4 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+                      className="px-6 py-3 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
                     >
                       Cancel
                     </button>
                     <button 
                       type="submit" 
-                      className="px-4.5 py-2.5 text-xs font-bold text-white bg-[#ff3b30] hover:bg-[#e02d22] rounded-xl shadow-lg shadow-red-500/10 transition-all"
+                      className="px-6 py-3 text-xs font-bold text-white bg-[#ff3b30] hover:bg-[#e02d22] rounded-xl shadow-lg shadow-red-500/10 transition-all"
                     >
                       Add Selected
                     </button>

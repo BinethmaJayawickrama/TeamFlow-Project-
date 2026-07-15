@@ -166,6 +166,7 @@ const getProjectById = async (req, res) => {
             assignee: {
               select: { id: true, email: true, firstName: true, lastName: true, avatar: true },
             },
+            attachments: true,
           },
           orderBy: { dueDate: 'asc' },
         },

@@ -231,7 +231,12 @@ export default function MemberDashboard() {
                           {task.projectName}
                         </span>
                         <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white leading-snug">{task.title}</h4>
-                        <span className="inline-flex px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-slate-150 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60 text-slate-650 dark:text-slate-400 mt-2">
+                        <span className={`inline-flex px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border ${
+                          task.status === 'COMPLETED' ? 'bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/30' :
+                          task.status === 'IN_PROGRESS' ? 'bg-blue-50/50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/30' :
+                          task.status === 'REVIEW' ? 'bg-purple-50/50 dark:bg-purple-950/20 text-purple-600 dark:text-purple-400 border-purple-100 dark:border-purple-900/30' :
+                          'bg-amber-50/50 dark:bg-amber-950/20 text-[#ff9500] border-amber-100 dark:border-amber-900/30'
+                        } mt-2`}>
                           {task.status.replace('_', ' ')}
                         </span>
                       </div>
