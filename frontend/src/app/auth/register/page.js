@@ -116,15 +116,18 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-450 mb-2">I am signing up as a...</label>
+            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-450 mb-2">Select Your Workspace Role</label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
               className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-800 dark:text-white font-semibold transition-colors"
             >
-              <option value="TEAM_MEMBER">Team Collaborator</option>
-              <option value="PROJECT_MANAGER">Project Manager</option>
+              <option value="TEAM_MEMBER">Team Collaborator (View tasks & submit status)</option>
+              <option value="PROJECT_MANAGER">Project Manager (Create projects, assign tasks & view reports)</option>
             </select>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 leading-relaxed pl-1">
+              💡 <strong>How to choose:</strong> Select <strong>Project Manager</strong> if you need to set up projects and allocate tasks. Select <strong>Team Collaborator</strong> if you are joining an existing team to complete tasks.
+            </p>
           </div>
 
           <button
