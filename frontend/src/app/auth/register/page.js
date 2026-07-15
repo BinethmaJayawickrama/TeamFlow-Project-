@@ -11,6 +11,7 @@ export default function RegisterPage() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('TEAM_MEMBER'); // Role selector: defaults to TEAM_MEMBER
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -25,6 +26,7 @@ export default function RegisterPage() {
         lastName,
         email: email.toLowerCase(),
         password,
+        role,
       });
 
       const { token, user } = response.data;
@@ -111,6 +113,18 @@ export default function RegisterPage() {
               className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-900 dark:text-white"
               required
             />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-450 mb-2">I am signing up as a...</label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-800 dark:text-white font-semibold transition-colors"
+            >
+              <option value="TEAM_MEMBER">Team Collaborator</option>
+              <option value="PROJECT_MANAGER">Project Manager</option>
+            </select>
           </div>
 
           <button

@@ -56,7 +56,7 @@ const login = async (req, res) => {
  */
 const register = async (req, res) => {
   try {
-    const { email, password, firstName, lastName } = req.body;
+    const { email, password, firstName, lastName, role } = req.body;
 
     if (!email || !password || !firstName || !lastName) {
       return res.status(400).json({ message: 'All fields are required.' });
@@ -72,13 +72,16 @@ const register = async (req, res) => {
 
     const hashedPassword = await hashPassword(password);
 
+    // Filter role to ensure only valid roles are registered publicly (cannot self-register as ADMIN)
+    const assignedRole = (role === 'PROJECT_MANAGER' || role === 'TEAM_MEMBER') ? role : 'TEAM_MEMBER';
+
     const user = await prisma.user.create({
       data: {
         email: email.toLowerCase(),
         password: hashedPassword,
         firstName,
         lastName,
-        role: 'TEAM_MEMBER', // Default registration role
+        role: assignedRole,
       },
     });
 
