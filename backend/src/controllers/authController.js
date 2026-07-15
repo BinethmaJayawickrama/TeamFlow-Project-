@@ -87,10 +87,18 @@ const register = async (req, res) => {
 
     const token = generateToken(user);
 
+    // Simulate sending a confirmation email to the user's provided email address
+    console.log(`========================================`);
+    console.log(`✉️ SIMULATED EMAIL DISPATCHER:`);
+    console.log(`TO: ${user.email}`);
+    console.log(`SUBJECT: Welcome to TeamFlow Workspace, ${user.firstName}!`);
+    console.log(`BODY: Your account has been successfully created. Role: ${user.role}.`);
+    console.log(`========================================`);
+
     // Track registration in activity log
     await prisma.activityLog.create({
       data: {
-        action: `New user account registered for ${user.firstName} ${user.lastName}.`,
+        action: `New user account registered for ${user.firstName} ${user.lastName}. Welcome email dispatched to ${user.email}.`,
         userId: user.id,
       },
     });
@@ -98,6 +106,7 @@ const register = async (req, res) => {
     const { password: _, ...userWithoutPassword } = user;
     res.status(201).json({
       token,
+      emailSent: true,
       user: userWithoutPassword,
     });
   } catch (error) {

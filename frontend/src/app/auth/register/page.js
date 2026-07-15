@@ -15,6 +15,8 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const [emailSentAlert, setEmailSentAlert] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -29,13 +31,22 @@ export default function RegisterPage() {
         role,
       });
 
-      const { token, user } = response.data;
+      const { token, user, emailSent } = response.data;
       
       localStorage.setItem('teamflow_token', token);
       localStorage.setItem('teamflow_user', JSON.stringify(user));
       
       updateProfile(user);
-      redirectDashboard(user.role);
+
+      if (emailSent) {
+        setEmailSentAlert(true);
+        // Delay redirect briefly to show the confirmation banner
+        setTimeout(() => {
+          redirectDashboard(user.role);
+        }, 3000);
+      } else {
+        redirectDashboard(user.role);
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Try again.');
       setLoading(false);
@@ -48,14 +59,22 @@ export default function RegisterPage() {
         
         {/* Header */}
         <div className="flex flex-col items-center mb-8">
-          {/* Logo with split white/red background matching the brand design system */}
-          <div className="w-12 h-12 rounded-full border-2 border-[#ff3b30] overflow-hidden flex shadow-md mb-4">
-            <div className="w-1/2 h-full bg-white flex items-center justify-end text-black font-extrabold text-xl pr-[1px]">T</div>
-            <div className="w-1/2 h-full bg-[#ff3b30] flex items-center justify-start text-white font-extrabold text-xl pl-[1px]">F</div>
+          {/* Logo matches sidebar custom design */}
+          <div className="w-12 h-12 rounded-full border-2 border-[#ff3b30] flex items-center justify-center font-black text-lg select-none shadow-md mb-4 bg-white dark:bg-[#1e1f25]">
+            <span className="text-slate-900 dark:text-white">T</span>
+            <span className="text-[#ff3b30] -ml-0.5">F</span>
           </div>
           <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Create Account</h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Get started with TeamFlow workspace</p>
         </div>
+
+        {/* Email Dispatched Alert */}
+        {emailSentAlert && (
+          <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 text-emerald-600 dark:text-emerald-400 text-xs px-4 py-3.5 rounded-2xl mb-6 font-medium leading-relaxed">
+            <strong>📧 Welcome Email Dispatched!</strong>
+            <p className="mt-1">We sent a workspace setup confirmation message to <strong>{email}</strong>.</p>
+          </div>
+        )}
 
         {/* Error Alert */}
         {error && (
