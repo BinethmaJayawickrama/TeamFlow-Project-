@@ -92,7 +92,7 @@ export default function PMProjects() {
             
             <button
               onClick={() => setModalOpen(true)}
-              className="flex items-center gap-2 bg-[#ff3b30] hover:bg-[#e02d22] text-white font-semibold text-xs uppercase tracking-wider px-4.5 py-3 rounded-2xl shadow-lg shadow-red-500/10 hover:shadow-red-500/20 transition-all duration-150 active:scale-[0.98] self-start sm:self-auto"
+              className="flex items-center gap-2 bg-[#ff3b30] hover:bg-[#e02d22] text-white font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-2xl shadow-lg shadow-red-500/10 hover:shadow-red-500/20 transition-all duration-150 active:scale-[0.98] self-start sm:self-auto"
             >
               <Plus size={16} />
               <span>Create Project</span>

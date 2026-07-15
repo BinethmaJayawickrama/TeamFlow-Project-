@@ -258,21 +258,12 @@ const updateTask = async (req, res) => {
     if (status && status !== task.status) {
       actions.push(`changed status of task "${task.title}" to "${status}"`);
       
-      // Notify PM and Assignee if it's completed
+      // Notify PM (project creator) if it's completed
       if (status === 'COMPLETED') {
-        if (task.assigneeId && task.assigneeId !== req.user.id) {
+        if (task.project.creatorId && task.project.creatorId !== req.user.id) {
           const notif = await prisma.notification.create({
             data: {
-              content: `Task "${task.title}" has been completed by ${req.user.firstName}.`,
-              userId: task.assigneeId,
-            },
-          });
-          sendLiveNotification(task.assigneeId, notif);
-        }
-        if (task.project.creatorId !== req.user.id) {
-          const notif = await prisma.notification.create({
-            data: {
-              content: `Task "${task.title}" in project "${task.project.name}" is completed.`,
+              content: `✅ Task completed: "${task.title}" has been marked finished by ${req.user.firstName} ${req.user.lastName}.`,
               userId: task.project.creatorId,
             },
           });
@@ -474,6 +465,24 @@ const uploadAttachment = async (req, res) => {
         taskId,
       },
     });
+
+    // Notify all project members about the uploaded document
+    const members = await prisma.projectMember.findMany({
+      where: { projectId: task.projectId },
+    });
+
+    const notifications = members
+      .filter((m) => m.userId !== req.user.id) // Don't notify the uploader
+      .map((m) => {
+        return prisma.notification.create({
+          data: {
+            content: `📁 New document uploaded: "${req.file.originalname}" inside task "${task.title}".`,
+            userId: m.userId,
+          },
+        });
+      });
+
+    await Promise.all(notifications);
 
     // Log Activity
     await prisma.activityLog.create({
