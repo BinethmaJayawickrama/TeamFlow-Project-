@@ -91,14 +91,14 @@ export default function MemberDashboard() {
     <RouteGuard allowedRoles={['TEAM_MEMBER']}>
       <Layout>
         {/* Outer Console Shell - Dynamic bg and text colors for dark and light modes */}
-        <div className="space-y-8 bg-white dark:bg-[#18191e] text-slate-900 dark:text-white p-2 rounded-[2rem] border border-slate-200 dark:border-slate-800/40 relative overflow-hidden font-sans transition-colors duration-200 min-h-[80vh] pb-12">
+        <div className="space-y-6 bg-white dark:bg-[#18191e] text-slate-900 dark:text-white p-2 rounded-[2rem] border border-slate-200 dark:border-slate-800/40 relative overflow-hidden font-sans transition-colors duration-200 min-h-[80vh] pb-12">
           
           {/* Orbs */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-[#ff3b30]/5 rounded-full blur-[80px] pointer-events-none"></div>
 
           {/* Header */}
-          <div className="p-4">
-            <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Collaborator Dashboard</h2>
+          <div className="px-4 pt-2">
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">MEMBER CONSOLE</h2>
             <p className="text-slate-555 dark:text-slate-400 text-sm mt-0.5">Welcome back, {user?.firstName}. Access and update your deliverables.</p>
           </div>
 

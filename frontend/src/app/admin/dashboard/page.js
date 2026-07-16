@@ -157,12 +157,12 @@ export default function AdminDashboard() {
         <div className="flex flex-col xl:flex-row gap-8 bg-white dark:bg-[#18191e] text-slate-900 dark:text-white p-2 rounded-[2rem] border border-slate-200 dark:border-slate-800/40 relative overflow-hidden font-sans transition-colors duration-200">
           
           {/* LEFT MAIN PANEL */}
-          <div className="flex-1 p-2 sm:p-4 space-y-6">
+          <div className="flex-1 p-2 sm:px-4 sm:pt-2 space-y-4">
             
             {/* Title & Navigation Tabs row */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Main Dashboard</h2>
+                <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">ADMIN CONSOLE</h2>
                 
                 {/* Secondary Navigation Subtabs */}
                 <div className="flex items-center gap-6 mt-6 border-b border-slate-200 dark:border-slate-800/60 pb-1 w-fit">

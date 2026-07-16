@@ -166,21 +166,12 @@ export default function Layout({ children }) {
     if (!user) return [];
     
     let dashPath = '/auth/login';
-    let dashName = 'DASHBOARD';
-    
-    if (user.role === 'ADMIN') {
-      dashPath = '/admin/dashboard';
-      dashName = 'ADMIN CONSOLE';
-    } else if (user.role === 'PROJECT_MANAGER') {
-      dashPath = '/pm/dashboard';
-      dashName = 'PM CONSOLE';
-    } else if (user.role === 'TEAM_MEMBER') {
-      dashPath = '/member/dashboard';
-      dashName = 'MEMBER CONSOLE';
-    }
+    if (user.role === 'ADMIN') dashPath = '/admin/dashboard';
+    else if (user.role === 'PROJECT_MANAGER') dashPath = '/pm/dashboard';
+    else if (user.role === 'TEAM_MEMBER') dashPath = '/member/dashboard';
 
     const base = [
-      { name: dashName, path: dashPath, icon: LayoutDashboard }
+      { name: 'Dashboard', path: dashPath, icon: LayoutDashboard }
     ];
 
     if (user.role === 'ADMIN') {
