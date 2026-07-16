@@ -239,12 +239,12 @@ export default function PMDashboard() {
                         <span className="text-[9px] font-bold text-slate-400 dark:text-slate-455 uppercase tracking-widest">Tasks</span>
                       </div>
                       {/* Team roster */}
-                      <div className="flex items-center mt-3 mb-4">
-                        <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-[#1e1f25] border border-slate-250 dark:border-slate-800 flex items-center justify-center text-[9px] font-bold overflow-hidden -ml-2 first:ml-0" title="Alice User">
-                          AU
+                      <div className="flex items-center mt-3 mb-4 pl-2">
+                        <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1c1d21] border-2 border-white dark:border-[#1e1f25] flex items-center justify-center text-[9px] font-bold overflow-hidden -ml-2.5 first:ml-0 shadow-sm" title="Alice User">
+                          <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Alice&gender=female" alt="Alice" className="w-full h-full object-cover" />
                         </div>
-                        <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-[#1e1f25] border border-slate-250 dark:border-slate-800 flex items-center justify-center text-[9px] font-bold overflow-hidden -ml-2" title="John Dev">
-                          JD
+                        <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1c1d21] border-2 border-white dark:border-[#1e1f25] flex items-center justify-center text-[9px] font-bold overflow-hidden -ml-2.5 shadow-sm" title="John Dev">
+                          <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=John&gender=male" alt="John" className="w-full h-full object-cover" />
                         </div>
                       </div>
                     </div>
