@@ -564,108 +564,108 @@ export default function PMProjectWorkspace({ params }) {
           {taskModalOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
               <div className="fixed inset-0 bg-slate-955/65 backdrop-blur-sm" onClick={() => setTaskModalOpen(false)}></div>
-              <div className="bg-white dark:bg-[#1e1f25] border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-3xl p-6.5 shadow-2xl relative z-10 text-slate-900 dark:text-white transition-colors">
-                <h3 className="font-extrabold text-sm uppercase tracking-wider mb-4 text-slate-850 dark:text-white">Create New Task</h3>
-                
-                <form onSubmit={handleCreateTask} className="space-y-4">
+            <div className="bg-white dark:bg-[#1e1f25] border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-3xl p-8 shadow-2xl relative z-10 text-slate-900 dark:text-white transition-colors">
+              <h3 className="font-extrabold text-sm uppercase tracking-wider mb-4 text-slate-850 dark:text-white">Create New Task</h3>
+              
+              <form onSubmit={handleCreateTask} className="space-y-4">
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Task Title</label>
+                  <input 
+                    type="text" 
+                    value={taskTitle} 
+                    onChange={(e) => setTaskTitle(e.target.value)} 
+                    placeholder="e.g. Design Homepage Wireframes"
+                    className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-900 dark:text-white" 
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Description</label>
+                  <textarea 
+                    value={taskDesc} 
+                    onChange={(e) => setTaskDesc(e.target.value)} 
+                    placeholder="Detail task instructions or criteria..."
+                    rows="3"
+                    className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-900 dark:text-white" 
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Task Title</label>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Priority</label>
+                    <select
+                      value={taskPriority}
+                      onChange={(e) => setTaskPriority(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-900 dark:text-white"
+                    >
+                      <option value="LOW">Low</option>
+                      <option value="MEDIUM">Medium</option>
+                      <option value="HIGH">High</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Task Status</label>
+                    <select
+                      value={taskStatus}
+                      onChange={(e) => setTaskStatus(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-900 dark:text-white"
+                    >
+                      <option value="TODO">Todo</option>
+                      <option value="IN_PROGRESS">In Progress</option>
+                      <option value="REVIEW">Review</option>
+                      <option value="COMPLETED">Completed</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Assignee</label>
+                    <select
+                      value={taskAssigneeId}
+                      onChange={(e) => setTaskAssigneeId(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-900 dark:text-white"
+                    >
+                      <option value="">Unassigned</option>
+                      {project.members.map((member) => (
+                        <option key={member.userId} value={member.userId}>
+                          {member.user.firstName} {member.user.lastName}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Due Date</label>
                     <input 
-                      type="text" 
-                      value={taskTitle} 
-                      onChange={(e) => setTaskTitle(e.target.value)} 
-                      placeholder="e.g. Design Homepage Wireframes"
-                      className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-900 dark:text-white" 
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Description</label>
-                    <textarea 
-                      value={taskDesc} 
-                      onChange={(e) => setTaskDesc(e.target.value)} 
-                      placeholder="Detail task instructions or criteria..."
-                      rows="3"
+                      type="date" 
+                      value={taskDueDate} 
+                      onChange={(e) => setTaskDueDate(e.target.value)} 
                       className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-900 dark:text-white" 
                     />
                   </div>
+                </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Priority</label>
-                      <select
-                        value={taskPriority}
-                        onChange={(e) => setTaskPriority(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-900 dark:text-white"
-                      >
-                        <option value="LOW">Low</option>
-                        <option value="MEDIUM">Medium</option>
-                        <option value="HIGH">High</option>
-                      </select>
-                    </div>
+                {modalError && <p className="text-xs text-rose-500 font-semibold">{modalError}</p>}
+                {modalSuccess && <p className="text-xs text-emerald-500 font-semibold">{modalSuccess}</p>}
 
-                    <div>
-                      <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Task Status</label>
-                      <select
-                        value={taskStatus}
-                        onChange={(e) => setTaskStatus(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-900 dark:text-white"
-                      >
-                        <option value="TODO">Todo</option>
-                        <option value="IN_PROGRESS">In Progress</option>
-                        <option value="REVIEW">Review</option>
-                        <option value="COMPLETED">Completed</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Assignee</label>
-                      <select
-                        value={taskAssigneeId}
-                        onChange={(e) => setTaskAssigneeId(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-900 dark:text-white"
-                      >
-                        <option value="">Unassigned</option>
-                        {project.members.map((member) => (
-                          <option key={member.userId} value={member.userId}>
-                            {member.user.firstName} {member.user.lastName}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-1.5">Due Date</label>
-                      <input 
-                        type="date" 
-                        value={taskDueDate} 
-                        onChange={(e) => setTaskDueDate(e.target.value)} 
-                        className="w-full bg-slate-50 dark:bg-[#18191e] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-[#ff3b30] text-slate-900 dark:text-white" 
-                      />
-                    </div>
-                  </div>
-
-                  {modalError && <p className="text-xs text-rose-500 font-semibold">{modalError}</p>}
-                  {modalSuccess && <p className="text-xs text-emerald-500 font-semibold">{modalSuccess}</p>}
-
-                  <div className="flex justify-end gap-3 mt-8 border-t border-slate-200 dark:border-slate-800/80 pt-4">
-                    <button 
-                      type="button" 
-                      onClick={() => setTaskModalOpen(false)}
-                      className="px-4 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button 
-                      type="submit" 
-                      className="px-4.5 py-2.5 text-xs font-bold text-white bg-[#ff3b30] hover:bg-[#e02d22] rounded-xl shadow-lg shadow-red-500/10 transition-all"
-                    >
-                      Create Task
-                    </button>
-                  </div>
+                <div className="flex justify-end gap-3 mt-8 border-t border-slate-200 dark:border-slate-800/80 pt-4">
+                  <button 
+                    type="button" 
+                    onClick={() => setTaskModalOpen(false)}
+                    className="px-6 py-3 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit" 
+                    className="px-6 py-3 text-xs font-bold text-white bg-[#ff3b30] hover:bg-[#e02d22] rounded-xl shadow-lg shadow-red-500/10 transition-all"
+                  >
+                    Create Task
+                  </button>
+                </div>
                 </form>
               </div>
             </div>

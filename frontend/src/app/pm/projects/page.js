@@ -181,7 +181,7 @@ export default function PMProjects() {
           {modalOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
               <div className="fixed inset-0 bg-slate-955/65 backdrop-blur-sm" onClick={() => setModalOpen(false)}></div>
-              <div className="bg-white dark:bg-[#1e1f25] border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-3xl p-6.5 shadow-2xl relative z-10 text-slate-900 dark:text-white transition-colors">
+              <div className="bg-white dark:bg-[#1e1f25] border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-3xl p-8 shadow-2xl relative z-10 text-slate-900 dark:text-white transition-colors">
                 
                 <h3 className="font-extrabold text-sm uppercase tracking-wider mb-4 text-slate-850 dark:text-white">Create New Project</h3>
                 
@@ -237,13 +237,13 @@ export default function PMProjects() {
                     <button 
                       type="button" 
                       onClick={() => setModalOpen(false)}
-                      className="px-4 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+                      className="px-6 py-3 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
                     >
                       Cancel
                     </button>
                     <button 
                       type="submit" 
-                      className="px-4.5 py-2.5 text-xs font-bold text-white bg-[#ff3b30] hover:bg-[#e02d22] rounded-xl shadow-lg shadow-red-500/10 transition-all"
+                      className="px-6 py-3 text-xs font-bold text-white bg-[#ff3b30] hover:bg-[#e02d22] rounded-xl shadow-lg shadow-red-500/10 transition-all"
                     >
                       Create Project
                     </button>
