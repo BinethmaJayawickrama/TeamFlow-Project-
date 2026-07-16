@@ -189,8 +189,7 @@ export default function Layout({ children }) {
         { name: 'Projects', path: '/pm/projects', icon: FolderKanban },
         { name: 'My Tasks', path: '/member/tasks', icon: CheckSquare },
         { name: 'Kanban Board', path: '/member/board', icon: CheckSquare },
-        { name: 'Calendar', path: '/member/calendar', icon: Calendar },
-        { name: 'Reports', path: '/pm/reports', icon: FileSpreadsheet }
+        { name: 'Calendar', path: '/member/calendar', icon: Calendar }
       ];
     }
 
