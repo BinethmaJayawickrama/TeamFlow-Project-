@@ -232,11 +232,24 @@ export default function AdminUsers() {
                         {/* Name & Avatar */}
                         <td className="p-6 pl-8">
                           <div className="flex items-center gap-3.5">
-                            <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white flex items-center justify-center font-bold text-xs overflow-hidden shadow-inner border border-slate-200 dark:border-slate-700">
-                              {u.avatar ? (
+                            <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white flex items-center justify-center font-bold text-xs overflow-hidden shadow-inner border border-slate-200 dark:border-slate-700 shrink-0">
+                              {u.avatar && u.avatar.trim() !== '' ? (
                                 <img src={u.avatar} alt={u.firstName} className="w-full h-full object-cover" />
                               ) : (
-                                u.firstName[0] + u.lastName[0]
+                                <img 
+                                  src={(() => {
+                                    const femaleNames = ['binethma', 'jane', 'mary', 'alice', 'sarah', 'emily', 'anna', 'lisa', 'sophie', 'chloe', 'olivia', 'emma', 'isabella', 'mia'];
+                                    const nameLower = u.firstName.toLowerCase();
+                                    const isFemale = femaleNames.some(f => nameLower.includes(f) || nameLower.endsWith('a'));
+                                    if (isFemale) {
+                                      return `https://api.dicebear.com/7.x/adventurer/svg?seed=${u.firstName}&gender=female&hairColor=ffd530,e1b305,623b1c,a55728&eyes=variant02,variant04`;
+                                    } else {
+                                      return `https://api.dicebear.com/7.x/adventurer/svg?seed=${u.firstName}&gender=male&hairColor=2c1b18,a55728,b56f3f&eyes=variant01,variant03`;
+                                    }
+                                  })()} 
+                                  alt={u.firstName} 
+                                  className="w-full h-full object-cover" 
+                                />
                               )}
                             </div>
                             <div>
