@@ -162,7 +162,7 @@ export default function AdminUsers() {
             
             <button
               onClick={handleOpenCreate}
-              className="flex items-center gap-2 bg-[#ff3b30] hover:bg-[#e02d22] text-white font-semibold text-xs uppercase tracking-wider px-4.5 py-3 rounded-2xl shadow-lg shadow-red-500/10 hover:shadow-red-500/20 transition-all duration-150 active:scale-[0.98] self-start sm:self-auto"
+              className="flex items-center gap-2 bg-[#ff3b30] hover:bg-[#e02d22] text-white font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-2xl shadow-lg shadow-red-500/10 hover:shadow-red-500/20 transition-all duration-150 active:scale-[0.98] self-start sm:self-auto"
             >
               <UserPlus size={16} />
               <span>Create Account</span>
@@ -201,18 +201,18 @@ export default function AdminUsers() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-150 dark:border-slate-800/60 bg-slate-50/50 dark:bg-[#1c1d21]/30">
-                    <th className="p-4.5 text-[9px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-widest pl-6">User profile</th>
-                    <th className="p-4.5 text-[9px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-widest">Access privileges</th>
-                    <th className="p-4.5 text-[9px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-widest">Account status</th>
-                    <th className="p-4.5 text-[9px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-widest">Joined Date</th>
-                    <th className="p-4.5 text-[9px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-widest pr-6 text-right">Actions</th>
+                  <tr className="border-b border-slate-155 dark:border-slate-800/60 bg-slate-50/50 dark:bg-[#1c1d21]/30">
+                    <th className="p-6 text-[9px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-widest pl-8">User profile</th>
+                    <th className="p-6 text-[9px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-widest">Access privileges</th>
+                    <th className="p-6 text-[9px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-widest">Account status</th>
+                    <th className="p-6 text-[9px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-widest">Joined Date</th>
+                    <th className="p-6 text-[9px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-widest pr-8 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-150 dark:divide-slate-800/50 text-slate-800 dark:text-slate-200">
                   {loading ? (
                     <tr>
-                      <td colSpan="5" className="p-12 text-center">
+                      <td colSpan="5" className="p-16 text-center">
                         <div className="relative w-8 h-8 mx-auto">
                           <div className="absolute inset-0 border-3 border-[#ff3b30]/10 rounded-full"></div>
                           <div className="absolute inset-0 border-3 border-[#ff3b30] border-t-transparent rounded-full animate-spin"></div>
@@ -221,7 +221,7 @@ export default function AdminUsers() {
                     </tr>
                   ) : filteredUsers.length === 0 ? (
                     <tr>
-                      <td colSpan="5" className="p-16 text-center text-slate-400 dark:text-slate-500 font-medium">
+                      <td colSpan="5" className="p-20 text-center text-slate-400 dark:text-slate-500 font-medium">
                         No users match your search criteria.
                       </td>
                     </tr>
@@ -230,7 +230,7 @@ export default function AdminUsers() {
                       <tr key={u.id} className="hover:bg-slate-50/30 dark:hover:bg-[#1c1d21]/15 transition-colors">
                         
                         {/* Name & Avatar */}
-                        <td className="p-4.5 pl-6">
+                        <td className="p-6 pl-8">
                           <div className="flex items-center gap-3.5">
                             <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white flex items-center justify-center font-bold text-xs overflow-hidden shadow-inner border border-slate-200 dark:border-slate-700">
                               {u.avatar ? (
@@ -246,8 +246,8 @@ export default function AdminUsers() {
                           </div>
                         </td>
 
-                        {/* Roles priviledges mapped to theme colors */}
-                        <td className="p-4.5">
+                        {/* Roles privileges mapped to theme colors */}
+                        <td className="p-6">
                           <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[9px] font-bold uppercase tracking-wider border ${
                             u.role === 'ADMIN' ? 'bg-red-50/50 dark:bg-red-950/20 border-red-100 dark:border-red-900/30 text-[#ff3b30]' :
                             u.role === 'PROJECT_MANAGER' ? 'bg-amber-50/50 dark:bg-amber-950/20 border-amber-100 dark:border-amber-900/30 text-[#ff9500]' :
@@ -259,7 +259,7 @@ export default function AdminUsers() {
                         </td>
 
                         {/* Status */}
-                        <td className="p-4.5">
+                        <td className="p-6">
                           <button
                             onClick={() => handleToggleStatus(u)}
                             className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[9px] font-bold uppercase tracking-wider border transition-colors ${
@@ -283,12 +283,12 @@ export default function AdminUsers() {
                           </button>
                         </td>
 
-                        <td className="p-4.5 text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
+                        <td className="p-6 text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
                           {new Date(u.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
                         </td>
 
                         {/* Actions */}
-                        <td className="p-4.5 pr-6 text-right space-x-1">
+                        <td className="p-6 pr-8 text-right space-x-1">
                           <button
                             onClick={() => handleOpenEdit(u)}
                             className="p-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/40 hover:bg-red-50 dark:hover:bg-red-950/30 text-slate-500 hover:text-[#ff3b30] rounded-xl transition-all"
@@ -316,7 +316,7 @@ export default function AdminUsers() {
           {modalOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
               <div className="fixed inset-0 bg-slate-950/65 backdrop-blur-sm" onClick={() => setModalOpen(false)}></div>
-              <div className="bg-white dark:bg-[#1e1f25] border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-3xl p-6.5 shadow-2xl relative z-10 text-slate-900 dark:text-white transition-colors">
+              <div className="bg-white dark:bg-[#1e1f25] border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-3xl p-8 shadow-2xl relative z-10 text-slate-900 dark:text-white transition-colors">
                 
                 <h3 className="font-extrabold text-sm uppercase tracking-wider text-slate-850 dark:text-white flex items-center gap-2 mb-1">
                   <UserCog size={18} className="text-[#ff3b30]" />
@@ -425,13 +425,13 @@ export default function AdminUsers() {
                     <button 
                       type="button" 
                       onClick={() => setModalOpen(false)}
-                      className="px-4 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+                      className="px-6 py-3 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
                     >
                       Cancel
                     </button>
                     <button 
                       type="submit" 
-                      className="px-4.5 py-2.5 text-xs font-bold text-white bg-[#ff3b30] hover:bg-[#e02d22] rounded-xl shadow-lg shadow-red-500/10 transition-all"
+                      className="px-6 py-3 text-xs font-bold text-white bg-[#ff3b30] hover:bg-[#e02d22] rounded-xl shadow-lg shadow-red-500/10 transition-all"
                     >
                       {modalMode === 'CREATE' ? 'Register User' : 'Apply Settings'}
                     </button>
