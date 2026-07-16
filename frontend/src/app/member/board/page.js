@@ -106,7 +106,7 @@ export default function KanbanBoard() {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 items-start overflow-y-auto px-4">
+            <div className="grid grid-cols-4 gap-6 items-start overflow-x-auto px-4 min-w-[768px]">
               {columns.map((col) => {
                 const colTasks = getTasksByColumn(col.id);
                 return (
